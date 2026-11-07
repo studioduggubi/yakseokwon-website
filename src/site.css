@@ -104,6 +104,8 @@ html.ys-readable .ys-action:hover{filter:brightness(.96)}
 .ys-independent .ys-motion-toggle:hover{background:#203b24b3}
 @media(max-width:991px){.ys-independent .ys-motion-toggle{right:18px;bottom:18px}}
 @media(prefers-reduced-motion:reduce){.ys-independent .ys-hero-motion,.ys-independent .ys-motion-toggle{display:none!important}}
+/* Match Imweb's mobile fixed poster crop, including the section's clipping boundary. */
+@media(max-width:991px){.ys-independent .ys-motion-bg.fixed_bg_wrap .ys-hero-motion{position:fixed;left:0;top:0;width:100%;height:100vh}}
 @media(max-width:991px){
  .ys-designed #ys-food-quality-v5 figcaption,.ys-designed #ys-food-serving-v5 figcaption{padding:14px 12px!important}
  .ys-designed #ys-food-quality-v5 figcaption h6,.ys-designed #ys-food-serving-v5 figcaption h6{font-size:17px!important}

@@ -134,7 +134,12 @@ def hero_motion(key,body):
  if not section:return body
  bg=section.select_one('.section_bg')
  if not bg:return body
- bg['style']='background-image:url("'+motion['poster']+'");background-size:cover;background-position:50% 50%'
+ bg['class']=list(bg.get('class',[]))+['ys-motion-bg']
+ # Preserve the captured positioning: the mobile fixed-image wrapper clips its children.
+ # Replacing the whole style removes its absolute inset and collapses that wrapper to zero height.
+ original_style=bg.get('style','')
+ replacement='background-image:url("'+motion['poster']+'");'
+ bg['style']=re.sub(r'background-image\s*:[^;]*;?',replacement,original_style,flags=re.I)if re.search(r'background-image\s*:',original_style,re.I)else original_style+';'+replacement
  for image in bg.select('img'):
   image['src']=motion['poster'];image.attrs.pop('srcset',None)
  video=doc.new_tag('video',attrs={'class':'ys-hero-motion','autoplay':'','muted':'','loop':'','playsinline':'','preload':'metadata','poster':motion['poster'],'aria-hidden':'true','tabindex':'-1'})

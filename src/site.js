@@ -82,7 +82,7 @@ if(pageName){
 // Only narrative blocks on plain sections become reading panels.
 document.querySelectorAll('[doz_type="section"]').forEach(section=>{
  const bg=section.querySelector(':scope > .section_bg');
- const hasPhoto=!!bg&&getComputedStyle(bg).backgroundImage!=='none';
+ const hasPhoto=!!bg&&(getComputedStyle(bg).backgroundImage!=='none'||!!bg.querySelector('img.fixed_bg,video.ys-hero-motion'));
  const widgets=[...section.querySelectorAll('[data-widget-type="text"] .text-table')];
  const long=widgets.filter(w=>w.textContent.trim().length>=85);
  if(!hasPhoto&&long.length<=4){
@@ -121,9 +121,10 @@ document.querySelectorAll('video.ys-hero-motion').forEach(video=>{
  if(!button)return;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');let userPaused=false,inView=true;
  video.muted=true;
- const sync=()=>{if(reduced.matches||document.hidden||!inView||userPaused){video.pause();}else{video.play().catch(()=>{button.hidden=false;button.textContent='영상 재생';button.setAttribute('aria-label','배경 영상 재생');});}};
+ const sync=()=>{if(reduced.matches||document.hidden||!inView||userPaused){video.pause();}else{video.play().then(reveal).catch(()=>{button.hidden=false;button.textContent='영상 재생';button.setAttribute('aria-label','배경 영상 재생');});}};
  const label=()=>{const paused=video.paused;button.textContent=paused?'재생':'일시정지';button.setAttribute('aria-label','배경 영상 '+(paused?'재생':'일시정지'));button.setAttribute('aria-pressed',String(userPaused));};
- video.addEventListener('playing',()=>{video.classList.add('ys-motion-ready');button.hidden=reduced.matches;label();});
+ const reveal=()=>{if(video.readyState>=2&&!video.paused){video.classList.add('ys-motion-ready');button.hidden=reduced.matches;label();}};
+ video.addEventListener('playing',reveal);
  video.addEventListener('pause',label);
  video.addEventListener('error',()=>{video.classList.remove('ys-motion-ready');button.hidden=true;});
  button.addEventListener('click',()=>{userPaused=!video.paused;sync();label();});

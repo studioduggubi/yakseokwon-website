@@ -1,12 +1,32 @@
 {
   "home": {
     "section": "s202509079207ed6c50305",
-    "src": "/media/home-hero-713d6951dd2e.mp4",
+    "src": "/media/home-hero-c438a4131d5d.mp4",
     "poster": "/media/home-hero-poster.webp",
-    "duration": 6,
-    "bytes": 633933,
+    "duration": 5,
+    "bytes": 717136,
     "source": "Higgsfield Wan 3.0",
-    "job_id": "491cd4d8-efb7-434d-a34c-ab24c339d267",
-    "motion": "Generated foliage only, stable original artwork plate; symmetric forward/reverse foliage cycle"
+    "job_id": "962833d6-6309-41c2-88c5-bd15897a06f4",
+    "motion": "Generated visible motion, stable original plate with protected subjects; forward circular crossfade loop"
+  },
+  "experience": {
+    "section": "s202508288408bd2e272a9",
+    "src": "/media/experience-hero-7b61a7e07bf0.mp4",
+    "poster": "/media/experience-hero-poster.webp",
+    "duration": 5,
+    "bytes": 336441,
+    "source": "Higgsfield Wan 3.0",
+    "job_id": "5e381619-4ca3-4dce-bea1-5da2402f8a38",
+    "motion": "Generated visible motion, stable original plate with protected subjects; forward circular crossfade loop"
+  },
+  "food": {
+    "section": "s20250831c3dc1b0969b90",
+    "src": "/media/food-hero-39af704fb557.mp4",
+    "poster": "/media/food-hero-poster.webp",
+    "duration": 5,
+    "bytes": 131143,
+    "source": "Higgsfield Wan 3.0",
+    "job_id": "cc15221b-7507-49df-9c89-6d3c7db365d8",
+    "motion": "Generated visible motion, stable original plate with protected subjects; forward circular crossfade loop"
   }
 }
