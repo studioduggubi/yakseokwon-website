@@ -3,6 +3,8 @@ import hashlib,html,json,pathlib,re,shutil,urllib.parse,zipfile,os
 from bs4 import BeautifulSoup
 from assets import preferred_fonts,URL,IMPORT,canonical
 ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
+RUNTIME_JS_HASH=hashlib.sha256((ROOT/'src/site.js').read_bytes()).hexdigest()[:16]
+RUNTIME_CSS_HASH=hashlib.sha256((ROOT/'src/site.css').read_bytes()).hexdigest()[:16]
 BASE_PATH='/'+os.environ.get('SITE_BASE_PATH','').strip('/')if os.environ.get('SITE_BASE_PATH','').strip('/')else''
 if not re.fullmatch(r'(?:/[A-Za-z0-9._-]+)*',BASE_PATH)or any(x in['.','..']for x in BASE_PATH.split('/')):raise ValueError('Invalid SITE_BASE_PATH')
 MAP=json.loads((ROOT/'content/asset-map.json').read_text())
@@ -131,9 +133,9 @@ def write_page(key,p,content=None):
  head+=''.join('<link rel="stylesheet" href="'+MAP.get(u,u)+'">'for u in p['stylesheets'])
  style='\n'.join(css(t,p['url'])for t in p['styles'][2:])
  name='page-'+hashlib.sha256(style.encode()).hexdigest()[:16]+'.css';(DIST/'assets'/name).write_text(style)
- head+='<link rel="stylesheet" href="/assets/'+name+'"><link rel="stylesheet" href="/site.css">'
+ head+='<link rel="stylesheet" href="/assets/'+name+'"><link rel="stylesheet" href="/site.css?v='+RUNTIME_CSS_HASH+'">'
  body=content if content is not None else sanitize(p)
- doc='<!doctype html><html lang="ko" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js" defer></script></body></html>'
+ doc='<!doctype html><html lang="ko" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js?v='+RUNTIME_JS_HASH+'" defer></script></body></html>'
  dest=DIST/route.strip('/')/'index.html';dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(prefix_html(doc))
  return route
 def main():

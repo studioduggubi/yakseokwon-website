@@ -1,5 +1,5 @@
 """Validate generated routes, assets, base paths, and search exclusion."""
-import json,pathlib,re,urllib.parse
+import json,pathlib,re,urllib.parse,hashlib
 from bs4 import BeautifulSoup
 ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
 BASE=BeautifulSoup((DIST/'index.html').read_text(),'html.parser').html.get('data-site-base','')
@@ -34,7 +34,7 @@ for f in pages:
     target=local_target(u,source);refs+=1
     if target is not None and not target.exists():errors.append([source,k,u])
  for script in s.select('script[src]'):
-  if script['src']!=BASE+'/site.js':errors.append([source,'unexpected script',script['src']])
+  if script['src']!=BASE+'/site.js?v='+hashlib.sha256((DIST/'site.js').read_bytes()).hexdigest()[:16]:errors.append([source,'unexpected script',script['src']])
 for f in(DIST/'assets').glob('*.css'):
  for url in re.findall(r'url\([\"\']?([^\"\'\)]+)',f.read_text(errors='replace')):
   if url.startswith('/')and not url.startswith('//'):
