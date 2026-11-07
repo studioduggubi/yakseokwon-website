@@ -1,12 +1,12 @@
 {
   "home": {
     "section": "s202509079207ed6c50305",
-    "src": "/media/home-hero-c797dee5d7cb.mp4",
+    "src": "/media/home-hero-713d6951dd2e.mp4",
     "poster": "/media/home-hero-poster.webp",
-    "duration": 5.6,
-    "bytes": 629180,
+    "duration": 6,
+    "bytes": 633933,
     "source": "Higgsfield Wan 3.0",
     "job_id": "491cd4d8-efb7-434d-a34c-ab24c339d267",
-    "motion": "Generated foliage only, stable original artwork plate; seamless circular crossfade"
+    "motion": "Generated foliage only, stable original artwork plate; symmetric forward/reverse foliage cycle"
   }
 }
