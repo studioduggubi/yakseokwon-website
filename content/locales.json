@@ -1,0 +1,9 @@
+{
+  "default": "ko",
+  "enabled": ["ko"],
+  "planned": ["en", "ja", "zh-CN", "zh-TW"],
+  "routing": "한국어 기존 경로 보존, 외국어는 승인 번역 후 언어 경로 추가",
+  "source_inventory_units": 603,
+  "translation_plan": "https://docs.google.com/spreadsheets/d/1mpZWrgIltBdy8yRFDrzYRJTU54EhZ0q9s_RGJkadkW0/edit",
+  "status": "Korean replica first; foreign-language copy is pending approval"
+}
