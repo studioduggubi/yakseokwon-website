@@ -12,3 +12,38 @@ html.ys-independent{overflow-x:clip}.ys-independent [data-menu-toggle] i::before
 /* Keep arrow hit areas above the image enlargement overlay. */
 .ys-independent .owl-controls{position:absolute;inset:0;z-index:20;pointer-events:none}.ys-independent .owl-prev,.ys-independent .owl-next{pointer-events:auto}
 .ys-independent .owl-nav>.owl-prev,.ys-independent .owl-nav>.owl-next{position:absolute;top:50%;transform:translateY(-50%);width:30px;height:30px}.ys-independent .owl-nav>.owl-prev{left:25px}.ys-independent .owl-nav>.owl-next{right:25px}.ys-independent .owl-nav>.owl-prev:before,.ys-independent .owl-nav>.owl-next:before{inset:0!important;margin:0!important}
+
+/* Approved readability system: keep the established brand artwork and palette. */
+html.ys-readable .ys-copy{font-size:15px!important;line-height:1.75!important;letter-spacing:0!important;overflow-wrap:break-word}
+html.ys-readable .ys-copy span{font-size:inherit!important;line-height:inherit!important}
+html.ys-readable .ys-copy+.ys-copy{margin-top:12px!important}
+html.ys-readable .ys-copy-centered{max-inline-size:52em;margin-inline:auto!important}
+html.ys-readable .ys-action{font-size:15px!important;font-weight:500!important;line-height:1.4!important}
+html.ys-readable #post_card_b202510194e9a3324b5869 .card{border:1px solid #e1e6dd!important;border-radius:6px;overflow:hidden}
+html.ys-readable .ysw-meta{font-size:13px!important;line-height:1.5!important;color:#466541!important}
+html.ys-readable #post_card_b202510194e9a3324b5869 .text.text-block,html.ys-readable #post_card_b202510194e9a3324b5869 .text.text-block span{font-size:13.5px!important;line-height:1.7!important;color:#626b5c!important}
+html.ys-readable #ys-food-quality-v5 figcaption p,html.ys-readable #ys-food-serving-v5 figcaption p{font-size:14px!important;line-height:1.75!important;color:#66513d!important}
+html.ys-readable #ys-food-quality-v5 figcaption h6,html.ys-readable #ys-food-serving-v5 figcaption h6{font-size:17px!important;line-height:1.5!important}
+html.ys-readable footer .custom-text-info span,html.ys-readable footer .custom-text-info a,html.ys-readable footer .policy_menu a,html.ys-readable footer .copryright-area{font-size:12px!important;line-height:1.8!important;color:#6a7365!important}
+@media(max-width:991px){html.ys-readable .ys-copy{font-size:16px!important;line-height:1.7!important}html.ys-readable .ys-copy+.ys-copy{margin-top:14px!important}}
+
+html.ys-readable #post_card_b202510194e9a3324b5869 .card-body{padding:10px 8px 12px!important}
+html.ys-readable #post_card_b202510194e9a3324b5869 .ysw-title,html.ys-readable #post_card_b202510194e9a3324b5869 .text.text-block{word-break:keep-all!important;overflow-wrap:break-word;text-wrap:pretty}
+
+/* Clearer hierarchy and controls across the complete site. */
+html.ys-readable .ys-copy{font-size:15.5px!important}
+html.ys-readable .ys-action{font-size:16px!important;line-height:1.4!important;min-height:48px;display:inline-flex;align-items:center;justify-content:center;white-space:normal;max-width:100%;font-weight:600!important}
+html.ys-readable header .viewport-nav>li>a,html.ys-readable header .viewport-nav>li>a>.plain_name{font-size:16px!important;font-weight:500;line-height:1.5}
+html.ys-readable header .viewport-nav>li>a.active .plain_name{text-decoration:underline;text-underline-offset:7px;text-decoration-thickness:1px}
+html.ys-readable [data-widget-type=text] h5,html.ys-readable [data-widget-type=text] h6{text-wrap:pretty;line-height:1.45!important}
+html.ys-readable .board_view{max-width:960px;margin-inline:auto}
+html.ys-readable .board_view .view_tit{font-size:28px;line-height:1.45;word-break:keep-all;overflow-wrap:break-word;text-wrap:pretty}
+html.ys-readable .board_view .board_txt_area p.ys-copy{line-height:1.8!important}
+html.ys-readable .board_view .action-area .ys-action{padding:12px 22px!important;border-radius:999px}
+html.ys-readable [id^=post_card_].type_row .post_link_wrap{padding-top:16px!important;padding-bottom:16px!important}
+html.ys-readable [id^=post_card_].type_row .ysw-title{font-size:18px!important;line-height:1.5!important;word-break:keep-all}
+html.ys-readable [id^=post_card_].type_row small.text-block{font-size:14px!important;line-height:1.7!important;color:#626b5c!important}
+html.ys-readable .ys-policy{max-width:900px;line-height:1.85}
+html.ys-readable .ys-action:hover{filter:brightness(.96)}
+@media(max-width:991px){html.ys-readable .ys-copy{font-size:16px!important}html.ys-readable .board_view .view_tit{font-size:23px}html.ys-readable [id^=post_card_].type_row .ysw-title{font-size:17px!important}}
+@media(min-width:992px){html.ys-readable #post_card_b202510194e9a3324b5869 .text.text-block,html.ys-readable #post_card_b202510194e9a3324b5869 .text.text-block span{font-size:14px!important}}

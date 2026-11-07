@@ -45,3 +45,20 @@ function showLightbox(index){lightboxIndex=(index+lightboxImages.length)%lightbo
 lightbox.querySelector('.ys-lightbox-close').addEventListener('click',()=>lightbox.close());lightbox.querySelector('.ys-lightbox-prev').addEventListener('click',()=>showLightbox(lightboxIndex-1));lightbox.querySelector('.ys-lightbox-next').addEventListener('click',()=>showLightbox(lightboxIndex+1));lightbox.addEventListener('click',e=>{if(e.target===lightbox)lightbox.close();});lightbox.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')showLightbox(lightboxIndex-1);if(e.key==='ArrowRight')showLightbox(lightboxIndex+1);});
 function localImage(element){const img=element.querySelector('img.org_image');if(img)return img.currentSrc||img.src;const bg=getComputedStyle(element.querySelector('.img_wrap')||element).backgroundImage;return bg.match(/^url\(["']?(.*?)["']?\)$/)?.[1];}
 document.querySelectorAll('.gallery2 ._lightbox_item,._img_box._image_widget_lightbox').forEach(target=>{if(target.closest('a[href]'))return;target.setAttribute('role','button');target.setAttribute('tabindex','0');target.setAttribute('aria-label','이미지 크게 보기');const open=()=>{const item=target.closest('.item_gallary')||target,gallery=target.closest('.gallery2');const items=gallery?[...gallery.querySelectorAll('.item_gallary:not(._dummy_item)')]:[item];lightboxImages=items.map(localImage).filter(Boolean);if(!lightboxImages.length)return;showLightbox(Math.max(0,lightboxImages.indexOf(localImage(item))));};target.addEventListener('click',open);target.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});});
+
+// Readable body copy and clearer controls, approved as the site-wide GUI update.
+root.classList.add('ys-readable');
+document.querySelectorAll('[doz_type="section"] [data-widget-type="text"] .text-table p,.board_txt_area p').forEach(p=>{
+ const article=!!p.closest('.board_txt_area');
+ if(p.closest('.section_first')||p.querySelector('img')||p.textContent.trim().length<(article?8:24))return;
+ const sizes=[p,...p.querySelectorAll('span,strong,b,em')].map(e=>parseFloat(getComputedStyle(e).fontSize));
+ if(Math.max(...sizes)>15)return;
+ p.classList.add('ys-copy');
+ if(getComputedStyle(p).textAlign==='center')p.classList.add('ys-copy-centered');
+});
+document.querySelectorAll('[doz_type="section"] .widget.button a.btn,.board_view .action-area a.btn,.board_view .action-area button').forEach(button=>{
+ if(button.closest('.section_first'))return;
+ if(parseFloat(getComputedStyle(button).fontSize)<=16)button.classList.add('ys-action');
+});
+function readableLayout(){gallerySize();gridSize();imageSize();masonryLayout();}
+readableLayout();document.fonts.ready.then(readableLayout);
