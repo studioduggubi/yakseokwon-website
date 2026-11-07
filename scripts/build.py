@@ -37,7 +37,7 @@ def css(t,base):
  return IMPORT.sub(lambda m:'@import "'+asset(m.group(1),base)+'"',t)
 def sanitize(p):
  s=BeautifulSoup(p['html'],'html.parser')
- for e in s.select('script,iframe,input[type=hidden],.like_btn,.like_token,.post_tools,.comment_write,.imweb_footer'):
+ for e in s.select('script,iframe,input[type=hidden],.like_btn,.like_token,.post_tools,.comment_write,.imweb_footer,#fo_board_spam_guard_notice'):
   e.decompose()
  for e in s.select('a[href^="/admin/"]'):e.decompose()
  for e in list(s.select('a,button')):
@@ -69,6 +69,18 @@ def sanitize(p):
   target.clear();target['class']=['widget','movie','ys-video'];target.attrs.pop('style',None)
   button=s.new_tag('button',type='button',attrs={'data-youtube':vid,'aria-label':'약석원 '+('좌훈'if'eSqo' in vid else'건강밥')+' 소개 영상 재생'})
   image=s.new_tag('img',src=src,alt='');button.append(image);play=s.new_tag('span',attrs={'class':'ys-play','aria-hidden':'true'});button.append(play);target.append(button)
+ for card in s.select('[data-href]'):
+  for a in card.select('a._fade_link'):a['href']=card['data-href']
+ for b in s.select('button'):
+  if b.get_text(strip=True)=='목록':b['data-href']='/events/'if'/events'in p['url']else'/newsroom/'
+ if'/newsroom'in p['url']:
+  current=int(urllib.parse.parse_qs(urllib.parse.urlsplit(p['url']).query).get('page',['1'])[0])
+  for a in s.select('.pagination a'):
+   text=a.get_text(' ',strip=True)
+   if'Previous'in text or'Next'in text:
+    target=current+(-1 if'Previous'in text else 1)
+    if 1<=target<=3:a['href']='/newsroom/'if target==1 else'/newsroom/page/'+str(target)+'/'
+    else:a.attrs.pop('href',None);a['aria-disabled']='true';a['tabindex']='-1'
  for e in s.select('.owl-item.cloned'):e.decompose()
  for link in s.select('a[href="/events/"]'):
   if link.get_text(strip=True)=='자료실'and link.parent and not link.parent.select_one('.ys-subnav'):
@@ -130,7 +142,10 @@ def main():
             if not match:continue
             detail=ROOT/'content/pages'/('post-'+('event'if kind=='events'else'news')+'-'+match[1]+'.json')
             text=card.get_text(' ',strip=True)
-            if detail.exists():text+=' '+BeautifulSoup(json.loads(detail.read_text())['html'],'html.parser').get_text(' ',strip=True)
+            if detail.exists():
+             article=BeautifulSoup(json.loads(detail.read_text())['html'],'html.parser')
+             for common in article.select('header,footer'):common.decompose()
+             text+=' '+article.get_text(' ',strip=True)
             board_index[kind].append({'url':url,'text':text,'html':str(card)})
     (DIST/'data').mkdir(exist_ok=True);(DIST/'data/boards.json').write_text(json.dumps(board_index,ensure_ascii=False))
     # Preserve the published policy text as content; factual placeholders remain explicitly pending in the translation plan.

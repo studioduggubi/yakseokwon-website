@@ -5,3 +5,5 @@ html{scroll-behavior:smooth}body{overflow-x:hidden}.ys-independent .animated{ani
 html.ys-independent{overflow-x:clip}.ys-independent [data-menu-toggle] i::before{content:''!important;width:18px;height:14px;display:inline-block;background:linear-gradient(to bottom,currentColor 0 1px,transparent 1px 6px,currentColor 6px 7px,transparent 7px 12px,currentColor 12px 13px,transparent 13px);vertical-align:middle}
 .ys-independent [data-menu-toggle] .icon-menu::before{content:''!important;width:18px;height:14px;display:inline-block;background:linear-gradient(to bottom,currentColor 0 1px,transparent 1px 6px,currentColor 6px 7px,transparent 7px 12px,currentColor 12px 13px,transparent 13px);vertical-align:middle}
 .ys-independent ._gallery_wrap{height:auto!important}.ys-independent .gallery2 ._item_hide,.ys-independent .gallery2 ._dummy_item{display:none!important}
+
+@media(max-width:767px){.ys-independent [data-widget-type=board] .li_footer>.tools.hidden-xs{display:inline-block!important;max-width:100%;margin:14px auto}}
