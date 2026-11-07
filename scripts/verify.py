@@ -1,31 +1,50 @@
-"""Validate generated routes, local assets, and independent runtime boundaries."""
+"""Validate generated routes, assets, base paths, and search exclusion."""
 import json,pathlib,re,urllib.parse
 from bs4 import BeautifulSoup
 ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
-errors=[];remote_resources=set();refs=0
+BASE=BeautifulSoup((DIST/'index.html').read_text(),'html.parser').html.get('data-site-base','')
+errors=[];remote_resources=set();refs=0;noindex_pages=0
+
+def local_target(url,source):
+ path=urllib.parse.urlsplit(url).path
+ if BASE:
+  if path!=BASE and not path.startswith(BASE+'/'):
+   errors.append([source,'path outside deployment base',url]);return None
+  path=path[len(BASE):]or'/'
+ target=DIST/path.lstrip('/')
+ return target/'index.html'if target.is_dir()else target
+
 pages=list(DIST.rglob('*.html'))
 for f in pages:
- text=f.read_text();s=BeautifulSoup(text,'html.parser')
- if '[Truncated]'in text:errors.append([str(f.relative_to(DIST)),'truncated source'])
+ text=f.read_text();s=BeautifulSoup(text,'html.parser');source=str(f.relative_to(DIST))
+ if '[Truncated]'in text:errors.append([source,'truncated source'])
+ robots=s.select_one('meta[name="robots"]')
+ if robots and 'noindex'in robots.get('content','').split(', '):noindex_pages+=1
+ else:errors.append([source,'missing noindex'])
  for e in s.find_all(True):
-  for k,v in e.attrs.items():
-   if k.startswith('on'):errors.append([str(f.relative_to(DIST)),'inline handler',k])
-  for k in ['src','poster','href','data-href']:
+  for k in e.attrs:
+   if k.startswith('on'):errors.append([source,'inline handler',k])
+  for k in['src','poster','href','data-href']:
    u=e.get(k)
    if not u or u.startswith(('mailto:','tel:','#','data:','javascript:')):continue
    if u.startswith(('https:','http:','//')):
-    if e.name in ['script','img','link','source','video']and(k!='href'or e.name=='link'):remote_resources.add(u)
+    if e.name in['script','img','link','source','video']and(k!='href'or e.name=='link'):remote_resources.add(u)
     continue
-   dest=urllib.parse.urlsplit(u).path
-   if dest.startswith('/'):
-    target=DIST/dest.lstrip('/');target=target/'index.html'if target.is_dir()else target;refs+=1
-    if not target.exists():errors.append([str(f.relative_to(DIST)),k,u])
+   if u.startswith('/'):
+    target=local_target(u,source);refs+=1
+    if target is not None and not target.exists():errors.append([source,k,u])
  for script in s.select('script[src]'):
-  if script['src']!='/site.js':errors.append([str(f.relative_to(DIST)),'unexpected script',script['src']])
-for f in (DIST/'assets').glob('*.css'):
+  if script['src']!=BASE+'/site.js':errors.append([source,'unexpected script',script['src']])
+for f in(DIST/'assets').glob('*.css'):
  for url in re.findall(r'url\([\"\']?([^\"\'\)]+)',f.read_text(errors='replace')):
-  if url.startswith('/assets/')and not(DIST/urllib.parse.urlsplit(url).path.lstrip('/')).exists():errors.append([f.name,'css asset',url])
+  if url.startswith('/')and not url.startswith('//'):
+   target=local_target(url,f.name)
+   if target is not None and not target.exists():errors.append([f.name,'css asset',url])
 index=json.loads((DIST/'data/boards.json').read_text())
-report={'pages':len(pages),'checked_local_references':refs,'board_entries':{k:len(v)for k,v in index.items()},'remote_resource_dependencies':sorted(remote_resources),'errors':errors}
+for rows in index.values():
+ for row in rows:
+  target=local_target(row['url'],'board search')
+  if target is not None and not target.exists():errors.append(['board search','missing post',row['url']])
+report={'pages':len(pages),'base_path':BASE,'noindex_pages':noindex_pages,'checked_local_references':refs,'board_entries':{k:len(v)for k,v in index.items()},'remote_resource_dependencies':sorted(remote_resources),'errors':errors}
 (ROOT/'reports/verification.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2))
 if errors or remote_resources:raise SystemExit(1)

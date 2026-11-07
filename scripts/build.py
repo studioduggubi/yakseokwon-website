@@ -1,11 +1,34 @@
 """Generate the independently served site from public content and localized assets."""
-import hashlib,html,json,pathlib,re,shutil,urllib.parse,zipfile
+import hashlib,html,json,pathlib,re,shutil,urllib.parse,zipfile,os
 from bs4 import BeautifulSoup
 from assets import preferred_fonts,URL,IMPORT,canonical
 ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
+BASE_PATH='/'+os.environ.get('SITE_BASE_PATH','').strip('/')if os.environ.get('SITE_BASE_PATH','').strip('/')else''
+if not re.fullmatch(r'(?:/[A-Za-z0-9._-]+)*',BASE_PATH)or any(x in['.','..']for x in BASE_PATH.split('/')):raise ValueError('Invalid SITE_BASE_PATH')
 MAP=json.loads((ROOT/'content/asset-map.json').read_text())
 DOWNLOADS={x['href']:'/downloads/'+x['file']for x in json.loads((ROOT/'content/downloads.json').read_text())}
 ROUTES={'home':'/','experience':'/Yakssuk/','food':'/food/','resources':'/events/','newsroom':'/newsroom/','brand':'/bi/','directions':'/2xlqqbbm/','tea':'/index2/','legacy-experience':'/2zf7yx5i/','legacy-food':'/2vu8cpl9/','legacy-store':'/20/','legacy-company':'/cq90acnd/','newsroom-page-2':'/newsroom/page/2/','newsroom-page-3':'/newsroom/page/3/'}
+def public_path(value):
+ if not BASE_PATH or not value.startswith('/')or value.startswith('//'):return value
+ if value==BASE_PATH or value.startswith(BASE_PATH+'/'):return value
+ return BASE_PATH+value
+
+def prefix_css(text):
+ text=URL.sub(lambda m:'url("'+public_path(m.group(1))+'")',text)
+ return IMPORT.sub(lambda m:'@import "'+public_path(m.group(1))+'"',text)
+
+def prefix_html(text):
+ if not BASE_PATH:return text
+ doc=BeautifulSoup(text,'html.parser')
+ for e in doc.find_all(True):
+  for attr in['href','src','poster','data-href','data-original','action']:
+   if e.get(attr):e[attr]=public_path(e[attr])
+  if e.get('srcset'):
+   e['srcset']=', '.join(public_path(part.strip().split(' ')[0])+(' '+part.strip().split(' ',1)[1]if' 'in part.strip()else'')for part in e['srcset'].split(','))
+  if e.get('style'):e['style']=prefix_css(e['style'])
+  if e.name=='style':e.string=prefix_css(e.get_text())
+ return str(doc)
+
 def page_route(key):
  if key.startswith('post-'):
   _,kind,idx=key.split('-');return '/'+('events'if kind=='event'else'newsroom')+'/'+idx+'/'
@@ -60,6 +83,10 @@ def sanitize(p):
   if e.get('style'):e['style']=css(e['style'],p['url'])
   if e.name=='style':e.string=css(e.get_text(),p['url'])
   if e.name=='form':e['action']='#';e['method']='get'
+ for a in s.select('header a[href]'):
+  if a.get('href','').startswith('/')and not a.get('href','').startswith('//'):
+   a['class']=[c for c in a.get('class',[])if c!='disabled']
+   a.attrs.pop('data-toggle',None);a.attrs.pop('aria-disabled',None)
  for box in s.select('[data-widget-type="video"]'):
   old=box.select_one('[data-vimeo-id]');img=box.select_one('img')
   vid=old.get('data-vimeo-id')if old else None
@@ -97,7 +124,7 @@ def drawer():
  return '<div class="ys-mobile-nav" id="ys-mobile-nav" hidden><div class="ys-mobile-panel" role="dialog" aria-modal="true" aria-label="전체 메뉴"><button class="ys-menu-close" data-menu-close>닫기 ×</button>'+''.join('<a href="'+u+'">'+t+'</a>'for t,u in links)+'</div></div>'
 def write_page(key,p,content=None):
  route=page_route(key)if key not in ['terms','privacy']else'/'+key+'/'
- head='<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>'+html.escape(p['title'])+'</title><meta name="description" content="'+html.escape(p.get('description',''),quote=True)+'">'
+ head='<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow, noarchive"><title>'+html.escape(p['title'])+'</title><meta name="description" content="'+html.escape(p.get('description',''),quote=True)+'">'
  early='\n'.join(css(t,p['url'])for t in p['styles'][:2])
  early_name='base-'+hashlib.sha256(early.encode()).hexdigest()[:16]+'.css';(DIST/'assets'/early_name).write_text(early)
  head+='<link rel="stylesheet" href="/assets/'+early_name+'">'
@@ -106,8 +133,8 @@ def write_page(key,p,content=None):
  name='page-'+hashlib.sha256(style.encode()).hexdigest()[:16]+'.css';(DIST/'assets'/name).write_text(style)
  head+='<link rel="stylesheet" href="/assets/'+name+'"><link rel="stylesheet" href="/site.css">'
  body=content if content is not None else sanitize(p)
- doc='<!doctype html><html lang="ko" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js" defer></script></body></html>'
- dest=DIST/route.strip('/')/'index.html';dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(doc)
+ doc='<!doctype html><html lang="ko" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js" defer></script></body></html>'
+ dest=DIST/route.strip('/')/'index.html';dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(prefix_html(doc))
  return route
 def main():
     missing=[v for v in list(MAP.values())+list(DOWNLOADS.values())if not(ROOT/'public'/v.lstrip('/')).exists()]
@@ -156,7 +183,13 @@ def main():
      content=str(hs.select_one('header'))+'<main class="ys-policy"><h1>'+name+'</h1>'+html.escape(raw)+'</main>'+str(hs.select_one('footer'))
      route_index.append({'key':key,'route':write_page(key,p,content),'title':p['title']})
     (DIST/'_redirects').write_text('/index / 301\n/about /events/ 301\n/index.html / 301\n')
-    (DIST/'robots.txt').write_text('User-agent: *\nDisallow: /\n')
+    (DIST/'robots.txt').write_text('# HTML noindex directives disable search indexing.\nUser-agent: *\nAllow: /\n')
+    (DIST/'.nojekyll').touch()
+    if BASE_PATH:
+     for sheet in (DIST/'assets').glob('*.css'):sheet.write_text(prefix_css(sheet.read_text()))
+     for rows in board_index.values():
+      for row in rows:row['url']=public_path(row['url']);row['html']=prefix_html(row['html'])
+     (DIST/'data/boards.json').write_text(json.dumps(board_index,ensure_ascii=False))
     (ROOT/'reports/routes.json').write_text(json.dumps(route_index,ensure_ascii=False,indent=2))
     print('Built',len(route_index),'pages; localized assets',len(MAP))
 
