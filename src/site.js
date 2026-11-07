@@ -61,3 +61,74 @@ document.querySelectorAll('[doz_type="section"] .widget.button a.btn,.board_view
 });
 function readableLayout(){gallerySize();gridSize();imageSize();masonryLayout();}
 readableLayout();document.fonts.ready.then(readableLayout);
+
+// A shared visual hierarchy for every page; artwork and original copy stay intact.
+root.classList.add('ys-designed');
+const pageKey=root.dataset.pageKey||'';
+const pageNames={brand:'브랜드',directions:'오시는 길',resources:'행사 일정',newsroom:'뉴스룸','newsroom-page-2':'뉴스룸','newsroom-page-3':'뉴스룸',tea:'차 이야기','legacy-company':'약석원 소개','legacy-experience':'좌훈 이야기','legacy-food':'건강식 이야기','legacy-store':'약석원 안내',terms:'이용약관',privacy:'개인정보처리방침'};
+const article=pageKey.startsWith('post-');
+const pageName=article?(pageKey.startsWith('post-event')?'행사 일정':'뉴스룸'):pageNames[pageKey];
+if(pageName){
+ const target=article?document.querySelector('.board_view'):document.querySelector('.ys-policy')||document.querySelector('[doz_type="section"] main .inside');
+ if(target){
+  const nav=document.createElement('nav');nav.className='ys-breadcrumb';nav.setAttribute('aria-label','현재 위치');
+  const home=document.createElement('a');home.href=siteBase+'/';home.textContent='약석원';nav.append(home);
+  const sep=document.createElement('span');sep.textContent='›';sep.setAttribute('aria-hidden','true');nav.append(sep);
+  const current=document.createElement(article?'a':'span');current.textContent=pageName;
+  if(article)current.href=siteBase+(pageKey.startsWith('post-event')?'/events/':'/newsroom/');else current.setAttribute('aria-current','page');
+  nav.append(current);target.prepend(nav);
+ }
+}
+// Only narrative blocks on plain sections become reading panels.
+document.querySelectorAll('[doz_type="section"]').forEach(section=>{
+ const bg=section.querySelector(':scope > .section_bg');
+ const hasPhoto=!!bg&&getComputedStyle(bg).backgroundImage!=='none';
+ const widgets=[...section.querySelectorAll('[data-widget-type="text"] .text-table')];
+ const long=widgets.filter(w=>w.textContent.trim().length>=85);
+ if(!hasPhoto&&long.length<=4){
+  long.forEach(w=>{
+   w.classList.add('ys-reading-panel');
+   const textLeaf=[...w.querySelectorAll('p,span,strong,b')].find(e=>!e.children.length&&e.textContent.trim());
+   const color=getComputedStyle(textLeaf||w).color;
+   const channels=color.match(/[\d.]+/g)?.slice(0,3).map(Number)||[];
+   if(channels.length===3&&channels.every(c=>c>210))w.classList.add('ys-reading-panel-light');
+  });
+ }
+ widgets.forEach(w=>{
+  const heading=w.querySelector('h1,h2,h3,h4,h5,h6');
+  if(!hasPhoto&&heading&&w.textContent.trim().length<85&&!w.closest('#ys-food-quality-v5,#ys-food-serving-v5'))w.classList.add('ys-section-heading');
+ });
+});
+// Keep each process illustration and its two text widgets together in one card.
+['img_w202508290a1083c8f3778','img_w20250829d5999780c2966','img_w20250829fd5234282324e','img_w202508298c26dac1c5ec4'].forEach(id=>{
+ const img=document.getElementById(id);if(!img)return;
+ let col=img.parentElement;
+ while(col&&!col.matches('[doz_type="section"]')){
+  if(col.classList.contains('col-dz-3')&&col.querySelectorAll('img').length===1&&col.querySelector('[data-widget-type="text"]')){
+   const frame=document.createElement('div');frame.className='ys-step-card';while(col.firstChild)frame.append(col.firstChild);col.append(frame);
+   col.classList.add('ys-step-column');break;
+  }col=col.parentElement;
+ }
+});
+if(document.querySelector('.board_view'))root.classList.add('ys-article-page');
+document.querySelectorAll('[id^="post_card_"].type_row>ul.list').forEach(row=>row.classList.add('ys-event-card'));
+document.querySelectorAll('.ys-policy').forEach(p=>p.classList.add('ys-paper'));
+readableLayout();document.fonts.ready.then(readableLayout);
+
+// Hero motion stays decorative; the original artwork is always the fallback.
+document.querySelectorAll('video.ys-hero-motion').forEach(video=>{
+ const section=video.closest('[doz_type="section"]'),button=section?.querySelector('.ys-motion-toggle');
+ if(!button)return;
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');let userPaused=false,inView=true;
+ video.muted=true;
+ const sync=()=>{if(reduced.matches||document.hidden||!inView||userPaused){video.pause();}else{video.play().catch(()=>{button.hidden=false;button.textContent='영상 재생';button.setAttribute('aria-label','배경 영상 재생');});}};
+ const label=()=>{const paused=video.paused;button.textContent=paused?'재생':'일시정지';button.setAttribute('aria-label','배경 영상 '+(paused?'재생':'일시정지'));button.setAttribute('aria-pressed',String(userPaused));};
+ video.addEventListener('playing',()=>{video.classList.add('ys-motion-ready');button.hidden=reduced.matches;label();});
+ video.addEventListener('pause',label);
+ video.addEventListener('error',()=>{video.classList.remove('ys-motion-ready');button.hidden=true;});
+ button.addEventListener('click',()=>{userPaused=!video.paused;sync();label();});
+ reduced.addEventListener('change',()=>{button.hidden=reduced.matches;sync();});
+ document.addEventListener('visibilitychange',sync);
+ new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;sync();},{threshold:.02}).observe(section);
+ sync();
+});

@@ -47,3 +47,64 @@ html.ys-readable .ys-policy{max-width:900px;line-height:1.85}
 html.ys-readable .ys-action:hover{filter:brightness(.96)}
 @media(max-width:991px){html.ys-readable .ys-copy{font-size:16px!important}html.ys-readable .board_view .view_tit{font-size:23px}html.ys-readable [id^=post_card_].type_row .ysw-title{font-size:17px!important}}
 @media(min-width:992px){html.ys-readable #post_card_b202510194e9a3324b5869 .text.text-block,html.ys-readable #post_card_b202510194e9a3324b5869 .text.text-block span{font-size:14px!important}}
+
+/* Visual GUI v3: recognizable frames and hierarchy, using the existing brand palette. */
+.ys-designed{--ys-green:#3e653e;--ys-line:#dfe6da;--ys-soft:#f5f7f1;--ys-brown:#66513d}
+.ys-designed .ys-breadcrumb{display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:13px;line-height:1.5;color:#77806e;margin:0 0 32px;padding-bottom:14px;border-bottom:1px solid var(--ys-line);text-align:left}
+.ys-designed .ys-breadcrumb a{color:var(--ys-green);text-decoration:none}.ys-designed .ys-breadcrumb a:hover{text-decoration:underline}
+.ys-designed .ys-section-heading h1,.ys-designed .ys-section-heading h2,.ys-designed .ys-section-heading h3,.ys-designed .ys-section-heading h4,.ys-designed .ys-section-heading h5,.ys-designed .ys-section-heading h6{font-size:28px!important;line-height:1.45!important;letter-spacing:-.025em!important;font-weight:600!important}
+.ys-designed .ys-section-heading:after{content:'';display:block;width:36px;height:2px;background:currentColor;opacity:.4;margin:16px 0 0}
+.ys-designed .ys-section-heading:has([style*="text-align: center"]):after{margin-inline:auto}
+.ys-designed .ys-reading-panel{background:var(--ys-soft);border:1px solid var(--ys-line);border-radius:14px;padding:24px!important;box-sizing:border-box;line-height:1.8}
+.ys-designed .ys-reading-panel-light{background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.2)}
+.ys-designed .ys-reading-panel p:last-child{margin-bottom:0!important}
+.ys-designed .ys-action{border-radius:999px!important;padding:13px 25px!important;box-shadow:0 3px 0 #213b2110;transition:background .2s,box-shadow .2s}
+.ys-designed .ys-action:hover{box-shadow:0 5px 12px #213b211a}
+.ys-designed .ys-step-card{border:1px solid var(--ys-line);border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 5px 20px #334d3308;height:100%}
+.ys-designed .ys-step-card>.doz_row{margin:0!important}.ys-designed .ys-step-card>.doz_row>.col-dz{padding:0!important}
+.ys-designed .ys-step-card [data-widget-type=text]{background:var(--ys-soft);padding:14px 18px 4px!important}
+.ys-designed .ys-step-card [data-widget-type=text]+[data-widget-type=text]{padding-top:0!important;padding-bottom:18px!important}
+.ys-designed .ys-step-card .ys-section-heading:after{display:none}
+.ys-designed .ys-step-card .ys-section-heading h6{font-size:18px!important}
+.ys-designed .ys-step-card [data-widget-type=text] p{font-size:15px!important;line-height:1.7!important}
+.ys-designed #ys-food-quality-v5 figure,.ys-designed #ys-food-serving-v5 figure{border:1px solid #e5dfd5!important;border-radius:16px!important;overflow:hidden;box-shadow:0 6px 20px #66513d09;background:#fff!important}
+.ys-designed #ys-food-quality-v5 figcaption,.ys-designed #ys-food-serving-v5 figcaption{padding:20px!important;background:#faf8f3}
+.ys-designed #ys-food-quality-v5 figcaption h6,.ys-designed #ys-food-serving-v5 figcaption h6{font-size:19px!important;margin-bottom:10px!important}
+.ys-designed [id^=post_card_].type_masonry .card{border:1px solid var(--ys-line)!important;border-radius:14px!important;overflow:hidden;background:#fff;box-shadow:0 5px 18px #304d300b}
+.ys-designed #post_card_b202510194e9a3324b5869 .card-body{padding:16px 14px 18px!important}
+.ys-designed .ys-event-card{border:1px solid var(--ys-line)!important;background:#fff;border-radius:12px;margin-bottom:12px!important;box-shadow:0 3px 12px #304d3006;overflow:hidden}
+.ys-designed .ys-event-card .post_link_wrap{padding:22px!important}
+.ys-designed .board_view{border:1px solid var(--ys-line);border-radius:18px;padding:32px!important;max-width:1000px;background:#fff;box-shadow:0 8px 36px #304d3008}
+.ys-designed .board_view .board-title{padding-bottom:22px!important;border-bottom:1px solid var(--ys-line)}
+.ys-designed .board_view .view_tit{font-size:30px!important;line-height:1.5!important;margin-bottom:14px}
+.ys-designed .board_view .board_txt_area{padding-top:28px!important;line-height:1.85}
+.ys-designed .board_view .action-area{border-top:1px solid var(--ys-line);padding-top:24px!important;margin-top:28px}
+.ys-designed .ys-paper{border:1px solid var(--ys-line);border-radius:18px;padding:36px!important;margin:44px auto 72px;background:#fafbf8}
+.ys-designed footer{border-top:1px solid var(--ys-line)!important;background:#f5f7f1!important}
+.ys-designed footer .footer-section{background:transparent!important}
+.ys-designed footer .custom-text-info{padding-block:14px!important}
+@media(max-width:991px){
+ .ys-designed .ys-breadcrumb{font-size:12px;gap:10px;margin-bottom:24px}
+ .ys-designed .ys-section-heading h1,.ys-designed .ys-section-heading h2,.ys-designed .ys-section-heading h3,.ys-designed .ys-section-heading h4,.ys-designed .ys-section-heading h5,.ys-designed .ys-section-heading h6{font-size:24px!important}
+ .ys-designed .ys-reading-panel{padding:20px!important;border-radius:12px}
+ .ys-designed .ys-step-column{margin-bottom:22px!important}
+ .ys-designed .ys-step-card [data-widget-type=text]{padding-inline:18px!important}
+ .ys-designed .ys-step-card .ys-section-heading h6{font-size:19px!important}
+ .ys-designed .board_view{padding:20px 16px!important;border-radius:12px}
+ .ys-designed .board_view .view_tit{font-size:24px!important}
+ .ys-designed #post_card_b202510194e9a3324b5869 .card-body{padding:12px 10px 14px!important}
+ .ys-designed .ys-event-card .post_link_wrap{padding:18px 14px!important}
+ .ys-designed .ys-paper{padding:24px 18px!important;margin:24px 15px 48px}
+}
+.ys-designed .ys-step-card{background:var(--ys-soft)}
+.ys-designed .ys-step-card [data-widget-type=image]{background:#fff}
+.ys-independent .ys-hero-motion{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;opacity:0;pointer-events:none}
+.ys-independent .ys-hero-motion.ys-motion-ready{opacity:1}
+.ys-independent .ys-motion-toggle{position:absolute;right:24px;bottom:22px;z-index:30;background:#203b2473;border:1px solid #ffffff70;color:white;border-radius:999px;padding:9px 15px;font:12px/1.4 SourceHanSerifKR,serif;cursor:pointer;min-height:36px}
+.ys-independent .ys-motion-toggle:hover{background:#203b24b3}
+@media(max-width:991px){.ys-independent .ys-motion-toggle{right:18px;bottom:18px}}
+@media(prefers-reduced-motion:reduce){.ys-independent .ys-hero-motion,.ys-independent .ys-motion-toggle{display:none!important}}
+@media(max-width:991px){
+ .ys-designed #ys-food-quality-v5 figcaption,.ys-designed #ys-food-serving-v5 figcaption{padding:14px 12px!important}
+ .ys-designed #ys-food-quality-v5 figcaption h6,.ys-designed #ys-food-serving-v5 figcaption h6{font-size:17px!important}
+}

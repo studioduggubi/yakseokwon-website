@@ -124,6 +124,23 @@ def sanitize(p):
 def drawer():
  links=[('약석원','/'),('좌훈 치유 체험관','/Yakssuk/'),('약식동원 건강식','/food/'),('행사 일정','/events/'),('뉴스룸','/newsroom/'),('브랜드','/bi/'),('오시는 길','/2xlqqbbm/')]
  return '<div class="ys-mobile-nav" id="ys-mobile-nav" hidden><div class="ys-mobile-panel" role="dialog" aria-modal="true" aria-label="전체 메뉴"><button class="ys-menu-close" data-menu-close>닫기 ×</button>'+''.join('<a href="'+u+'">'+t+'</a>'for t,u in links)+'</div></div>'
+def hero_motion(key,body):
+ config=ROOT/'content/hero-motion.json'
+ if not config.exists():return body
+ motion=json.loads(config.read_text()).get(key)
+ if not motion:return body
+ if not(ROOT/'public'/motion['src'].lstrip('/')).is_file():raise RuntimeError('Hero video is missing')
+ doc=BeautifulSoup(body,'html.parser');section=doc.find(id=motion['section'])
+ if not section:return body
+ bg=section.select_one('.section_bg')
+ if not bg:return body
+ bg['style']='background-image:url("'+motion['poster']+'");background-size:cover;background-position:50% 50%'
+ for image in bg.select('img'):
+  image['src']=motion['poster'];image.attrs.pop('srcset',None)
+ video=doc.new_tag('video',attrs={'class':'ys-hero-motion','autoplay':'','muted':'','loop':'','playsinline':'','preload':'metadata','poster':motion['poster'],'aria-hidden':'true','tabindex':'-1'})
+ video.append(doc.new_tag('source',src=motion['src'],type='video/mp4'));bg.append(video)
+ button=doc.new_tag('button',type='button',attrs={'class':'ys-motion-toggle','aria-label':'배경 영상 일시정지','aria-pressed':'false','hidden':''});button.string='일시정지';section.append(button)
+ return str(doc)
 def write_page(key,p,content=None):
  route=page_route(key)if key not in ['terms','privacy']else'/'+key+'/'
  head='<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow, noarchive"><title>'+html.escape(p['title'])+'</title><meta name="description" content="'+html.escape(p.get('description',''),quote=True)+'">'
@@ -134,8 +151,8 @@ def write_page(key,p,content=None):
  style='\n'.join(css(t,p['url'])for t in p['styles'][2:])
  name='page-'+hashlib.sha256(style.encode()).hexdigest()[:16]+'.css';(DIST/'assets'/name).write_text(style)
  head+='<link rel="stylesheet" href="/assets/'+name+'"><link rel="stylesheet" href="/site.css?v='+RUNTIME_CSS_HASH+'">'
- body=content if content is not None else sanitize(p)
- doc='<!doctype html><html lang="ko" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js?v='+RUNTIME_JS_HASH+'" defer></script></body></html>'
+ body=hero_motion(key,content if content is not None else sanitize(p))
+ doc='<!doctype html><html lang="ko" data-page-key="'+html.escape(key,quote=True)+'" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js?v='+RUNTIME_JS_HASH+'" defer></script></body></html>'
  dest=DIST/route.strip('/')/'index.html';dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(prefix_html(doc))
  return route
 def main():
