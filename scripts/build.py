@@ -94,7 +94,7 @@ def sanitize(p):
   target=box.select_one('.widget.movie')or box
   src=img.get('src','')if img else''
   target.clear();target['class']=['widget','movie','ys-video'];target.attrs.pop('style',None)
-  button=s.new_tag('button',type='button',attrs={'data-youtube':vid,'aria-label':'약석원 '+('좌훈'if'eSqo' in vid else'건강밥')+' 소개 영상 재생'})
+  button=s.new_tag('button',type='button',attrs={'data-youtube':vid,'aria-label':'약석원 '+('좌훈'if vid=='eSqoQWNZdxw'else'건강밥'if vid=='v2MK2laprFI'else'체험')+' 소개 영상 재생'})
   image=s.new_tag('img',src=src,alt='');button.append(image);play=s.new_tag('span',attrs={'class':'ys-play','aria-hidden':'true'});button.append(play);target.append(button)
  for card in s.select('[data-href]'):
   for a in card.select('a._fade_link'):a['href']=card['data-href']

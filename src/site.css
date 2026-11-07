@@ -6,4 +6,9 @@ html.ys-independent{overflow-x:clip}.ys-independent [data-menu-toggle] i::before
 .ys-independent [data-menu-toggle] .icon-menu::before{content:''!important;width:18px;height:14px;display:inline-block;background:linear-gradient(to bottom,currentColor 0 1px,transparent 1px 6px,currentColor 6px 7px,transparent 7px 12px,currentColor 12px 13px,transparent 13px);vertical-align:middle}
 .ys-independent ._gallery_wrap{height:auto!important}.ys-independent .gallery2 ._item_hide,.ys-independent .gallery2 ._dummy_item{display:none!important}
 
-@media(max-width:767px){.ys-independent [data-widget-type=board] .li_footer>.tools.hidden-xs{display:inline-block!important;max-width:100%;margin:14px auto}}
+
+
+.ys-lightbox{border:0;padding:0;background:transparent;max-width:100vw;max-height:100dvh;width:100vw;height:100dvh;color:#fff;overflow:hidden}.ys-lightbox::backdrop{background:rgba(0,0,0,.92)}.ys-lightbox[open]{display:grid;place-items:center}.ys-lightbox>img{display:block;max-width:calc(100vw - 100px);max-height:calc(100dvh - 100px);object-fit:contain}.ys-lightbox>button{position:absolute;background:rgba(0,0,0,.4);color:#fff;border:0;border-radius:50%;width:44px;height:44px;cursor:pointer;font:36px/1 sans-serif}.ys-lightbox-close{right:18px;top:18px}.ys-lightbox-prev{left:12px;top:calc(50% - 22px)}.ys-lightbox-next{right:12px;top:calc(50% - 22px)}
+/* Keep arrow hit areas above the image enlargement overlay. */
+.ys-independent .owl-controls{position:absolute;inset:0;z-index:20;pointer-events:none}.ys-independent .owl-prev,.ys-independent .owl-next{pointer-events:auto}
+.ys-independent .owl-nav>.owl-prev,.ys-independent .owl-nav>.owl-next{position:absolute;top:50%;transform:translateY(-50%);width:30px;height:30px}.ys-independent .owl-nav>.owl-prev{left:25px}.ys-independent .owl-nav>.owl-next{right:25px}.ys-independent .owl-nav>.owl-prev:before,.ys-independent .owl-nav>.owl-next:before{inset:0!important;margin:0!important}
