@@ -50,14 +50,13 @@ document.querySelectorAll('.gallery2 ._lightbox_item,._img_box._image_widget_lig
 root.classList.add('ys-readable');
 document.querySelectorAll('[doz_type="section"] [data-widget-type="text"] .text-table p,.board_txt_area p').forEach(p=>{
  const article=!!p.closest('.board_txt_area');
- if(p.closest('.section_first')||p.querySelector('img')||p.textContent.trim().length<(article?8:24))return;
+ if(p.querySelector('img')||p.textContent.trim().length<(article?8:24))return;
  const sizes=[p,...p.querySelectorAll('span,strong,b,em')].map(e=>parseFloat(getComputedStyle(e).fontSize));
  if(Math.max(...sizes)>15)return;
  p.classList.add('ys-copy');
  if(getComputedStyle(p).textAlign==='center')p.classList.add('ys-copy-centered');
 });
 document.querySelectorAll('[doz_type="section"] .widget.button a.btn,.board_view .action-area a.btn,.board_view .action-area button').forEach(button=>{
- if(button.closest('.section_first'))return;
  if(parseFloat(getComputedStyle(button).fontSize)<=16)button.classList.add('ys-action');
 });
 function readableLayout(){gallerySize();gridSize();imageSize();masonryLayout();}
