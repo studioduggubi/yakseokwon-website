@@ -1,6 +1,7 @@
 """Generate the independently served site from public content and localized assets."""
 import hashlib,html,json,pathlib,re,shutil,urllib.parse,zipfile,os
 from bs4 import BeautifulSoup
+from gui import enhance,page_title
 from assets import preferred_fonts,URL,IMPORT,canonical
 ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
 RUNTIME_JS_HASH=hashlib.sha256((ROOT/'src/site.js').read_bytes()).hexdigest()[:16]
@@ -190,7 +191,7 @@ def hero_motion(key,body):
  return str(doc)
 def write_page(key,p,content=None):
  route=page_route(key)if key not in ['terms','privacy']else'/'+key+'/'
- head='<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow, noarchive"><title>'+html.escape(p['title'])+'</title><meta name="description" content="'+html.escape(p.get('description',''),quote=True)+'">'
+ head='<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow, noarchive"><title>'+html.escape(page_title(key,p))+'</title><meta name="description" content="'+html.escape(p.get('description',''),quote=True)+'">'
  early='\n'.join(css(t,p['url'])for t in p['styles'][:2])
  early_name='base-'+hashlib.sha256(early.encode()).hexdigest()[:16]+'.css';(DIST/'assets'/early_name).write_text(early)
  head+='<link rel="stylesheet" href="/assets/'+early_name+'">'
@@ -201,6 +202,7 @@ def write_page(key,p,content=None):
  body=content if content is not None else sanitize(p)
  if key=='food':body=food_ingredient_cards(body)
  body=hero_motion(key,body)
+ body=enhance(key,body)
  doc='<!doctype html><html lang="ko" data-page-key="'+html.escape(key,quote=True)+'" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js?v='+RUNTIME_JS_HASH+'" defer></script></body></html>'
  dest=DIST/route.strip('/')/'index.html';dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(prefix_html(doc))
  return route
@@ -241,14 +243,20 @@ def main():
              article=BeautifulSoup(json.loads(detail.read_text())['html'],'html.parser')
              for common in article.select('header,footer'):common.decompose()
              text+=' '+article.get_text(' ',strip=True)
-            board_index[kind].append({'url':url,'text':text,'html':str(card)})
+            board_index[kind].append({'url':url,'text':text,'html':enhance('search-preview',str(card))})
     (DIST/'data').mkdir(exist_ok=True);(DIST/'data/boards.json').write_text(json.dumps(board_index,ensure_ascii=False))
     # Preserve the published policy text as content; factual placeholders remain explicitly pending in the translation plan.
     home=json.loads((ROOT/'content/pages/home.json').read_text());hs=BeautifulSoup(sanitize(home),'html.parser')
     for key,name in [('terms','이용약관'),('privacy','개인정보처리방침')]:
      raw=json.loads((ROOT/'content'/('policy-'+key+'.json')).read_text())['text'].split('\n닫기\n',1)[1]
      p={**home,'title':name+' — 약석원','bodyClass':'doz_sys new_header_site page'}
-     content=str(hs.select_one('header'))+'<main class="ys-policy"><h1>'+name+'</h1>'+html.escape(raw)+'</main>'+str(hs.select_one('footer'))
+     paragraphs=[]
+     for line in raw.splitlines():
+      line=line.strip()
+      if not line:continue
+      tag='h2'if re.match(r'^(제\s*\d+\s*조|\d+\.\s)',line)and len(line)<85 else'p'
+      paragraphs.append('<'+tag+'>'+html.escape(line)+'</'+tag+'>')
+     content=str(hs.select_one('header'))+'<main class="ys-policy" id="ys-main"><h1>'+name+'</h1><div class="ys-policy-copy">'+''.join(paragraphs)+'</div></main>'+str(hs.select_one('footer'))
      route_index.append({'key':key,'route':write_page(key,p,content),'title':p['title']})
     (DIST/'_redirects').write_text('/index / 301\n/about /events/ 301\n/index.html / 301\n')
     (DIST/'robots.txt').write_text('# HTML noindex directives disable search indexing.\nUser-agent: *\nAllow: /\n')

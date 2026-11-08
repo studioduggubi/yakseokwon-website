@@ -1,5 +1,6 @@
 """Validate generated routes, assets, base paths, and search exclusion."""
 import json,pathlib,re,urllib.parse,hashlib
+from collections import Counter
 from bs4 import BeautifulSoup
 ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
 BASE=BeautifulSoup((DIST/'index.html').read_text(),'html.parser').html.get('data-site-base','')
@@ -15,8 +16,17 @@ def local_target(url,source):
  return target/'index.html'if target.is_dir()else target
 
 pages=list(DIST.rglob('*.html'))
+parsed={f:BeautifulSoup(f.read_text(),'html.parser')for f in pages}
 for f in pages:
- text=f.read_text();s=BeautifulSoup(text,'html.parser');source=str(f.relative_to(DIST))
+ text=f.read_text();s=parsed[f];source=str(f.relative_to(DIST))
+ if len(s.select('h1'))!=1:errors.append([source,'expected one page heading'])
+ duplicates=[key for key,count in Counter(e['id']for e in s.select('[id]')).items()if count>1]
+ if duplicates:errors.append([source,'duplicate IDs',duplicates])
+ for anchor in s.select('a[href]'):
+  url=urllib.parse.urlsplit(anchor['href'])
+  if url.scheme or url.netloc or not url.fragment:continue
+  target=local_target(url.path,source)if url.path else f
+  if target in parsed and not parsed[target].find(id=urllib.parse.unquote(url.fragment)):errors.append([source,'missing fragment',anchor['href']])
  if '[Truncated]'in text:errors.append([source,'truncated source'])
  robots=s.select_one('meta[name="robots"]')
  if robots and 'noindex'in robots.get('content','').split(', '):noindex_pages+=1

@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "href": "/download.cm?tk=YToyOntpOjA7czoxMzoiOWE5NDE5NjI2ZDgxNyI7aToxO3M6MjI6ImYyMDI1MTAxOTQyYTc5MmE4ZmRmNmQiO30=",
+    "file": "yakseokwon-logo.ai",
+    "label": "AI logo"
+  },
+  {
+    "href": "/download.cm?tk=YToyOntpOjA7czoxMzoiZjhlMmZlNWRkM2JhYSI7aToxO3M6MjI6ImYyMDI1MTAxOTFhNzViYWEyNWE2YmIiO30=",
+    "file": "yakseokwon-logo-png.zip",
+    "label": "PNG logo archive"
+  },
+  {
+    "href": "/download.cm?tk=YToyOntpOjA7czoxMzoiYzA0YzcwYzBjMzFlZCI7aToxO3M6MjI6ImYyMDI1MTAxOTljZGM1YzYxMWUzNDYiO30=",
+    "file": "yakseokwon-brand-guidelines.pdf",
+    "label": "Brand guidelines"
+  }
+]
