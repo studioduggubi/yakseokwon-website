@@ -243,8 +243,8 @@ def main():
             text=card.get_text(' ',strip=True)
             if detail.exists():
              article=BeautifulSoup(json.loads(detail.read_text())['html'],'html.parser')
-             for common in article.select('header,footer'):common.decompose()
-             text+=' '+article.get_text(' ',strip=True)
+             # Search the selected article, not titles in its previous/next links.
+             text+=' '+' '.join(node.get_text(' ',strip=True)for node in article.select('.view_tit,.board_txt_area'))
             board_index[kind].append({'url':url,'text':text,'html':enhance('search-preview',str(card))})
     (DIST/'data').mkdir(exist_ok=True);(DIST/'data/boards.json').write_text(json.dumps(board_index,ensure_ascii=False))
     # Preserve the published policy text as content; factual placeholders remain explicitly pending in the translation plan.
