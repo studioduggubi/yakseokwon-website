@@ -124,7 +124,12 @@ def compact_components(doc,key):
 def enhance(key,body):
  if key=='tea':body=tea_page(body)
  doc=BeautifulSoup(body,'html.parser')
- for control in doc.select('.board_view .dropdown-toggle,.board_view .comment_num'):control.decompose()
+ # Remove comment UI completely; retain the article's previous/next navigation.
+ for section in list(doc.select('.comment_section')):
+  if section.select_one('.list_tap'):
+   section['class']=[c for c in section.get('class',[])if c!='comment_section']+['ys-article-links']
+  else:section.decompose()
+ for control in doc.select('.board_view .dropdown-toggle,#comment_area,#comment_container,#comment_form,.comment_area,.comment_write,.comment_textarea,.comment_list,.comment-count,.comment_cnt,.comment_num,.btn-group-comment'):control.decompose()
  for image in doc.select('.section_bg img.fixed_bg'):image['alt']=''
  for anchor in doc.select('header a:has(img)'):
   anchor['aria-label']='약석원 홈'
