@@ -1,5 +1,6 @@
 const root=document.documentElement;
 const siteBase=root.dataset.siteBase||'';
+const pageBase=siteBase+(root.dataset.localeBase||'');
 root.classList.add('ys-independent');
 const drawer=document.querySelector('#ys-mobile-nav');
 function toggleMenu(open){if(!drawer)return;drawer.hidden=!open;document.body.classList.toggle('ys-menu-open',open);document.querySelectorAll('[data-menu-toggle]').forEach(b=>b.setAttribute('aria-expanded',String(open)));if(open)drawer.querySelector('button')?.focus();else document.querySelector('[data-menu-toggle]')?.focus();}
@@ -23,7 +24,7 @@ function youtubeApi(){
 }
 document.querySelectorAll('[data-youtube]').forEach(button=>button.addEventListener('click',()=>{
  const iframe=document.createElement('iframe');
- const params=new URLSearchParams({autoplay:'1',mute:'1',playsinline:'1',rel:'0',enablejsapi:'1',origin:location.origin,cc_load_policy:'0',cc_lang_pref:'ko'});
+ const params=new URLSearchParams({autoplay:'1',mute:'1',playsinline:'1',rel:'0',enablejsapi:'1',origin:location.origin,cc_load_policy:'0',cc_lang_pref:button.dataset.captionLanguage||'ko'});
  iframe.src=`https://www.youtube-nocookie.com/embed/${button.dataset.youtube}?${params}`;
  iframe.title=button.getAttribute('aria-label')||'약석원 소개 영상';iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';button.replaceWith(iframe);
  youtubeApi().then(YT=>{
@@ -40,7 +41,7 @@ document.querySelectorAll('.owl-carousel').forEach(g=>{const track=g.querySelect
 let boardIndexPromise;
 document.querySelectorAll('form').forEach(form=>{
  const input=form.querySelector('input[name="keyword"]');if(!input)return;
- const kind=location.pathname.slice(siteBase.length).startsWith('/events')?'events':'newsroom';
+ const kind=location.pathname.slice(pageBase.length).startsWith('/events')?'events':'newsroom';
  const container=document.querySelector('[id^="post_card_"]');if(!container)return;
  const original=container.innerHTML;let generation=0;
  const search=async()=>{
@@ -52,7 +53,7 @@ document.querySelectorAll('form').forEach(form=>{
   else{
    status.textContent='검색 중…';
    try{
-    boardIndexPromise??=fetch(siteBase+'/data/boards.json?v='+encodeURIComponent(root.dataset.boardVersion||''),{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('search index unavailable');return r.json();}).catch(error=>{boardIndexPromise=null;throw error;});
+    boardIndexPromise??=fetch(pageBase+'/data/boards.json?v='+encodeURIComponent(root.dataset.boardVersion||''),{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('search index unavailable');return r.json();}).catch(error=>{boardIndexPromise=null;throw error;});
     const index=await boardIndexPromise;if(current!==generation)return;
     const rows=(index[kind]||[]).filter(x=>x.text.toLocaleLowerCase().includes(q));
     container.innerHTML=rows.map(x=>x.html).join('');status.textContent=`검색 결과 ${rows.length}건`;
@@ -127,10 +128,10 @@ if(pageName){
  const target=article?document.querySelector('.board_view'):document.querySelector('.ys-policy')||document.querySelector('[doz_type="section"] main .inside');
  if(target){
   const nav=document.createElement('nav');nav.className='ys-breadcrumb';nav.setAttribute('aria-label','현재 위치');
-  const home=document.createElement('a');home.href=siteBase+'/';home.textContent='약석원';nav.append(home);
+  const home=document.createElement('a');home.href=pageBase+'/';home.textContent='약석원';nav.append(home);
   const sep=document.createElement('span');sep.textContent='›';sep.setAttribute('aria-hidden','true');nav.append(sep);
   const current=document.createElement(article?'a':'span');current.textContent=pageName;
-  if(article)current.href=siteBase+(pageKey.startsWith('post-event')?'/events/':'/newsroom/');else current.setAttribute('aria-current','page');
+  if(article)current.href=pageBase+(pageKey.startsWith('post-event')?'/events/':'/newsroom/');else current.setAttribute('aria-current','page');
   nav.append(current);target.prepend(nav);
  }
 }

@@ -51,7 +51,7 @@ for f in pages:
     target=local_target(u,source);refs+=1
     if target is not None and not target.exists():errors.append([source,'srcset',u])
  for script in s.select('script[src]'):
-  if script['src']!=BASE+'/site.js?v='+hashlib.sha256((DIST/'site.js').read_bytes()).hexdigest()[:16]:errors.append([source,'unexpected script',script['src']])
+  if script['src'] not in[BASE+'/site.js?v='+hashlib.sha256((DIST/'site.js').read_bytes()).hexdigest()[:16],BASE+'/i18n.js?v='+hashlib.sha256((DIST/'i18n.js').read_bytes()).hexdigest()[:16]]and script['src']not in[BASE+'/i18n/'+p.name for p in(DIST/'i18n').glob('*.js')]:errors.append([source,'unexpected script',script['src']])
 for f in(DIST/'assets').glob('*.css'):
  for url in re.findall(r'url\([\"\']?([^\"\'\)]+)',f.read_text(errors='replace')):
   if url.startswith('/')and not url.startswith('//'):

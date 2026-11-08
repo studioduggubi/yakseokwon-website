@@ -1,0 +1,12 @@
+{
+  "default": "ko",
+  "locales": [
+    {"code":"ko","html_lang":"ko","prefix":"","name":"한국어","short":"KO","flag":"🇰🇷"},
+    {"code":"en","html_lang":"en","prefix":"/en","name":"English","short":"EN","flag":"🇺🇸"},
+    {"code":"zh-TW","html_lang":"zh-Hant","prefix":"/zh-TW","name":"繁體中文","short":"繁中","flag":"🇹🇼"},
+    {"code":"ja","html_lang":"ja","prefix":"/ja","name":"日本語","short":"日本語","flag":"🇯🇵"}
+  ],
+  "scope": "Website text and controls; original photographs, artwork, packaging, event posters, third-party articles and video masters are preserved.",
+  "translation_basis": "Current published Korean website, Japanese reviewed terminology from the existing translation plan, and client corrections supplied on 2026-11-08.",
+  "review_status": "Editorial translation; not certified translation or legal review. Existing policy template fields are preserved."
+}

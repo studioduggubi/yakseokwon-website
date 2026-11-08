@@ -2,9 +2,10 @@
 import hashlib,html,json,pathlib,re,shutil,urllib.parse,zipfile,os
 from bs4 import BeautifulSoup
 from gui import enhance,page_title
+from localize import localize_site
 from assets import preferred_fonts,URL,IMPORT,canonical
 ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
-BOARD_CONTENT_HASH=hashlib.sha256(b''.join(p.read_bytes()for p in sorted((ROOT/'content/pages').glob('*.json')))).hexdigest()[:16]
+BOARD_CONTENT_HASH=hashlib.sha256(b''.join(p.read_bytes()for p in sorted(list((ROOT/'content/pages').glob('*.json'))+list((ROOT/'content/locales').glob('*.json'))))).hexdigest()[:16]
 RUNTIME_JS_HASH=hashlib.sha256((ROOT/'src/site.js').read_bytes()).hexdigest()[:16]
 RUNTIME_CSS_HASH=hashlib.sha256((ROOT/'src/site.css').read_bytes()).hexdigest()[:16]
 BASE_PATH='/'+os.environ.get('SITE_BASE_PATH','').strip('/')if os.environ.get('SITE_BASE_PATH','').strip('/')else''
@@ -269,6 +270,7 @@ def main():
      for rows in board_index.values():
       for row in rows:row['url']=public_path(row['url']);row['html']=prefix_html(row['html'])
      (DIST/'data/boards.json').write_text(json.dumps(board_index,ensure_ascii=False))
+    route_index=localize_site(ROOT,DIST,route_index,BASE_PATH)
     (ROOT/'reports/routes.json').write_text(json.dumps(route_index,ensure_ascii=False,indent=2))
     print('Built',len(route_index),'pages; localized assets',len(MAP))
 

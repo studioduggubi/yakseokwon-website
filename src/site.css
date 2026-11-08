@@ -692,3 +692,37 @@ html.ys-independent.ys-designed .ys-event-body p{max-width:66ch}
 
 /* A captured Imweb scroll position must not become a permanently fixed header. */
 html.ys-independent #doz_header_wrap .new_org_header .scroll-to-fixed-fixed2{position:relative!important;top:auto!important;left:auto!important;width:100%!important;margin-left:0!important}
+
+/* Language control belongs to the header and follows it out of view. */
+html.ys-independent .ys-language{position:absolute;right:28px;top:32px;z-index:100002;font:500 13px/1.4 var(--ys-sans);color:#3e633b;letter-spacing:0}
+html.ys-independent .ys-language>summary{display:flex;align-items:center;gap:7px;min-height:42px;padding:8px 11px;border:1px solid #d9dfd2;border-radius:7px;background:#fff;cursor:pointer;list-style:none;white-space:nowrap;user-select:none}
+html.ys-independent .ys-language>summary::-webkit-details-marker{display:none}
+html.ys-independent .ys-language-flag{font-size:18px;line-height:1}
+html.ys-independent .ys-language-chevron{font-size:13px;line-height:1}
+html.ys-independent .ys-language>nav{position:absolute;top:calc(100% + 7px);right:0;width:176px;padding:6px;background:#fff;border:1px solid #d9dfd2;border-radius:9px;box-shadow:0 7px 24px #23351c1c}
+html.ys-independent .ys-language nav>a{display:flex;gap:10px;align-items:center;min-height:44px;padding:10px 12px;border-radius:5px;color:#334d30!important;font-size:14px;text-decoration:none;white-space:nowrap}
+html.ys-independent .ys-language nav>a:hover,html.ys-independent .ys-language nav>a:focus-visible{background:#eef3e9}
+html.ys-independent .ys-language nav>a[aria-current]{background:#eef3e9;font-weight:700}
+html.ys-independent[data-page-key="home"] .ys-language>summary,html.ys-independent[data-page-key="experience"] .ys-language>summary{background:#20321f40;color:#fff;border-color:#ffffff70}
+html.ys-independent:not([lang="ko"]){--ys-serif:Georgia,"Times New Roman",serif;--ys-sans:Arial,Helvetica,sans-serif}
+html.ys-independent:lang(zh){--ys-serif:"Songti TC","Noto Serif TC","PMingLiU",serif;--ys-sans:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif}
+html.ys-independent:lang(ja){--ys-serif:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;--ys-sans:"Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif}
+html.ys-independent:not([lang="ko"]) body{font-family:var(--ys-sans)}
+html.ys-independent:not([lang="ko"]) .ys-page-hero h1,html.ys-independent:not([lang="ko"]) .ys-content-section h2,html.ys-independent:not([lang="ko"]) .ys-content-section h3,html.ys-independent:not([lang="ko"]) .ys-bi-page h1,html.ys-independent:not([lang="ko"]) .ys-bi-page h2{font-family:var(--ys-serif)!important}
+html.ys-independent:lang(en) .ys-section-title,html.ys-independent:lang(en) .ys-hero-title,html.ys-independent:lang(en) .ys-explore-card,html.ys-independent:lang(en) .ys-process-grid,html.ys-independent:lang(en) .ys-ingredient-card{word-break:normal!important;overflow-wrap:break-word}
+html.ys-independent:not([lang="ko"]) .ys-policy-source{padding:12px 15px;margin:0 0 28px;border-left:2px solid #637b57;background:#f3f6ee;font:400 13px/1.7 var(--ys-sans)}
+html.ys-independent .ys-poster-credit{font-size:12px!important;color:#697161;margin-top:-12px!important;margin-bottom:25px!important}
+@media(min-width:992px){html.ys-independent #doz_header_wrap .viewport-nav{padding-right:110px!important}}
+@media(max-width:991px){html.ys-independent .ys-language{top:25px;right:20px;font-size:12px}html.ys-independent .ys-language>summary{min-height:40px;padding:7px 9px;gap:5px}html.ys-independent .ys-language-flag{font-size:17px}}
+@media(max-width:350px){html.ys-independent .ys-language{right:14px}html.ys-independent .ys-language>summary{gap:4px;padding:7px}}
+@media(prefers-reduced-motion:reduce){html.ys-independent .ys-language *{transition:none}}
+html.ys-independent:lang(zh) :is(h1,h2,h3,h4,p,summary,a),html.ys-independent:lang(ja) :is(h1,h2,h3,h4,p,summary,a){word-break:normal!important;line-break:strict;overflow-wrap:break-word}
+
+/* Translated hero copy keeps the original light ink and a readable measure. */
+html.ys-independent:not([lang="ko"]):is([data-page-key="home"],[data-page-key="experience"]) .ys-page-hero .ys-hero-title{max-width:27ch;color:#fff!important;word-break:normal;overflow-wrap:break-word}
+html.ys-independent:not([lang="ko"]):is([data-page-key="home"],[data-page-key="experience"]) .ys-page-hero p{max-width:65ch;color:#fff!important;word-break:normal;overflow-wrap:break-word}
+/* Captured table cells must shrink within translated news card grids. */
+html.ys-independent .ys-news-link>.card-body{display:block!important;min-width:0!important;width:100%!important;max-width:100%!important}
+html.ys-independent .ys-news-link :is(.text_wrap,.title-block,.text-block){min-width:0!important;max-width:100%!important}
+html.ys-independent:not([lang="ko"]) .ys-news-grid .ysw-title{word-break:normal!important;overflow-wrap:break-word}
+html.ys-independent:not([lang="ko"]) #post_card_b202510194e9a3324b5869 :is(.ysw-title,.text.text-block){word-break:normal!important;overflow-wrap:break-word!important;text-wrap:wrap!important;line-break:strict}
