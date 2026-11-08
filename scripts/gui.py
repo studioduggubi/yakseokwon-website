@@ -122,6 +122,8 @@ def compact_components(doc,key):
   replace_inside(section,'<div class="ys-section-intro"><p class="ys-kicker">체험 순서</p><h2 class="ys-section-title">좌훈 체험 4단계</h2></div><ol class="ys-process-grid">'+items+'</ol>')
 
 def enhance(key,body):
+ if key=='brand':
+  original=BeautifulSoup(body,'html.parser');body=str(original.select_one('header'))+(Path(__file__).resolve().parents[1]/'content/brand-page.html').read_text()+str(original.select_one('footer'))
  if key=='tea':body=tea_page(body)
  doc=BeautifulSoup(body,'html.parser')
  # Remove comment UI completely; retain the article's previous/next navigation.
@@ -198,7 +200,9 @@ def enhance(key,body):
  for a in doc.select('a[href]'):
   if '예약' in clean(a):a['href']=a['href'].replace('#REVIEW','')
   if a.get('target')=='_blank':a['rel']='noopener noreferrer'
-  if a.get('href','').endswith('yakseokwon-logo-png.zip'):a.clear();a.string='PNG 로고 모음 다운로드 (ZIP)';a['download']=''
+  if a.get('href','').endswith('yakseokwon-logo-png.zip'):
+   if not a.find_parent(class_='ys-bi-page'):a.clear();a.string='PNG 로고 모음 다운로드 (ZIP)'
+   a['download']=''
   if '/downloads/'in a.get('href',''):a['download']=''
  for field in doc.select('input[name=keyword]'):
   field['aria-label']='게시글 검색';field['placeholder']='제목이나 내용으로 검색'
