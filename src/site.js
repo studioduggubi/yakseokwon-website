@@ -10,33 +10,6 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!drawer?.hidden)tog
 drawer?.addEventListener('click',e=>{if(e.target===drawer)toggleMenu(false)});
 document.addEventListener('click',e=>{const el=e.target.closest('[data-href]');if(el&&!e.target.closest('a[href]'))location.assign(el.dataset.href);});
 document.addEventListener('keydown',e=>{const el=e.target.closest('[data-href]');if(el&&e.key==='Enter'){e.preventDefault();location.assign(el.dataset.href);}});
-// The approved film already contains Korean captions. Avoid a second automatic
-// caption layer during startup, while leaving the viewer's CC control available.
-let youtubeApiPromise;
-function youtubeApi(){
- if(window.YT?.Player)return Promise.resolve(window.YT);
- return youtubeApiPromise??=new Promise((resolve,reject)=>{
-  const previous=window.onYouTubeIframeAPIReady;
-  window.onYouTubeIframeAPIReady=()=>{previous?.();resolve(window.YT);};
-  const script=document.createElement('script');script.src='https://www.youtube.com/iframe_api';script.async=true;
-  script.onerror=()=>{youtubeApiPromise=null;reject(new Error('YouTube API unavailable'));};document.head.append(script);
- });
-}
-document.querySelectorAll('[data-youtube]').forEach(button=>button.addEventListener('click',()=>{
- const iframe=document.createElement('iframe');
- const params=new URLSearchParams({autoplay:'1',mute:'1',playsinline:'1',rel:'0',enablejsapi:'1',origin:location.origin,cc_load_policy:'0',cc_lang_pref:button.dataset.captionLanguage||'ko'});
- iframe.src=`https://www.youtube-nocookie.com/embed/${button.dataset.youtube}?${params}`;
- iframe.title=button.getAttribute('aria-label')||'약석원 소개 영상';iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';button.replaceWith(iframe);
- youtubeApi().then(YT=>{
-  let initialPlayback=true;
-  const avoidDuplicateCaptions=event=>{
-   if(initialPlayback&&typeof event.target.unloadModule==='function')event.target.unloadModule('captions');
-  };
-  new YT.Player(iframe,{events:{onReady:event=>{avoidDuplicateCaptions(event);setTimeout(()=>{initialPlayback=false;},1500);},onApiChange:avoidDuplicateCaptions,onStateChange:event=>{
-   if(initialPlayback&&event.data===YT.PlayerState.PLAYING){avoidDuplicateCaptions(event);initialPlayback=false;}
-  }}});
- }).catch(()=>{/* The standard embedded player remains usable without the API. */});
-}));
 document.querySelectorAll('.owl-carousel').forEach(g=>{const track=g.querySelector('.owl-stage'),outer=g.querySelector('.owl-stage-outer');if(!track||!outer)return;g.querySelectorAll('.owl-item.cloned').forEach(e=>e.remove());track.style.transform='none';track.style.width='max-content';track.style.display='flex';g.querySelectorAll('.owl-item').forEach(e=>{e.style.float='none';e.style.flexShrink='0';});g.querySelectorAll('.owl-prev,.owl-next').forEach((b)=>{b.setAttribute('role','button');b.setAttribute('tabindex','0');b.setAttribute('aria-label',b.classList.contains('owl-prev')?'이전 이미지':'다음 이미지');const move=()=>{const back=b.classList.contains('owl-prev'),end=outer.scrollWidth-outer.clientWidth;const left=back?(outer.scrollLeft<2?end:Math.max(0,outer.scrollLeft-outer.clientWidth)):(outer.scrollLeft>end-2?0:Math.min(end,outer.scrollLeft+outer.clientWidth));outer.scrollTo({left,behavior:'smooth'});};b.addEventListener('click',move);b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();move()}});});});
 let boardIndexPromise;
 document.querySelectorAll('form').forEach(form=>{

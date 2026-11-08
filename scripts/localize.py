@@ -2,6 +2,7 @@
 import hashlib,html,json,re,urllib.parse
 from pathlib import Path
 from bs4 import BeautifulSoup,Comment,NavigableString
+from media_links import localize_videos
 KR=re.compile('[가-힣]')
 BLOCKS=['h1','h2','h3','h4','h5','h6','p','label','legend','option']
 def norm(text):return re.sub(r'\s+',' ',str(text)).strip()
@@ -117,7 +118,7 @@ def localize_site(root,dist,route_index,base):
     policy=doc.select_one('.ys-policy')
     if policy:
      note=doc.new_tag('p',attrs={'class':'ys-policy-source'});note.append(source_label[0]+' ');a=doc.new_tag('a',href=base+route,attrs={'lang':'ko'});a.string=source_label[1];note.append(a);policy.select_one('h1').insert_after(note)
-   for e in doc.select('[data-youtube]'):e['data-caption-language']={'zh-TW':'zh-Hant'}.get(code,code)
+   localize_videos(doc,code,base)
    main_script=doc.select_one('script[src*="/site.js"]')
    if code!='ko':
     script=doc.new_tag('script',src=base+runtime_files[code],attrs={'defer':''});main_script.insert_before(script)

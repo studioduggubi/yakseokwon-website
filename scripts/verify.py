@@ -20,6 +20,12 @@ parsed={f:BeautifulSoup(f.read_text(),'html.parser')for f in pages}
 for f in pages:
  text=f.read_text();s=parsed[f];source=str(f.relative_to(DIST))
  if len(s.select('h1'))!=1:errors.append([source,'expected one page heading'])
+ if s.select('[data-youtube],.ys-video iframe'):errors.append([source,'embedded video playback remains'])
+ if s.html.get('data-page-key')in['food','experience']and len(s.select('a.ys-video-link'))!=1:errors.append([source,'expected one native video link'])
+ for video in s.select('a.ys-video-link'):
+  url=urllib.parse.urlsplit(video.get('href',''));query=urllib.parse.parse_qs(url.query)
+  if url.scheme!='https'or url.hostname!='www.youtube.com'or url.path!='/watch'or not re.fullmatch('[A-Za-z0-9_-]{11}',query.get('v',[''])[0]):errors.append([source,'invalid YouTube video URL'])
+  if video.get('target')!='_blank'or'noopener'not in video.get('rel',[]):errors.append([source,'unsafe external video link'])
  duplicates=[key for key,count in Counter(e['id']for e in s.select('[id]')).items()if count>1]
  if duplicates:errors.append([source,'duplicate IDs',duplicates])
  for anchor in s.select('a[href]'):

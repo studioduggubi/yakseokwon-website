@@ -1,0 +1,25 @@
+{
+  "playback": "Native external links; no embedded YouTube player or API",
+  "public_video_language": "ko",
+  "foreign_video_status": "English, Traditional Chinese and Japanese masters exist in Drive; corresponding public YouTube uploads were not verified. Use the current official Korean videos and disclose their language below foreign thumbnails.",
+  "videos": {
+    "eSqoQWNZdxw": {
+      "subject": "experience",
+      "youtube_by_locale": {},
+      "thumbnails": {
+        "en": "/media/video-en-experience.webp",
+        "zh-TW": "/media/video-zh-TW-experience.webp",
+        "ja": "/media/video-ja-experience.webp"
+      }
+    },
+    "v2MK2laprFI": {
+      "subject": "food",
+      "youtube_by_locale": {},
+      "thumbnails": {
+        "en": "/media/video-en-food.webp",
+        "zh-TW": "/media/video-zh-TW-food.webp",
+        "ja": "/media/video-ja-food.webp"
+      }
+    }
+  }
+}

@@ -3,6 +3,7 @@ import hashlib,html,json,pathlib,re,shutil,urllib.parse,zipfile,os
 from bs4 import BeautifulSoup
 from gui import enhance,page_title
 from localize import localize_site
+from media_links import rice_instructions
 from assets import preferred_fonts,URL,IMPORT,canonical
 ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
 BOARD_CONTENT_HASH=hashlib.sha256(b''.join(p.read_bytes()for p in sorted(list((ROOT/'content/pages').glob('*.json'))+list((ROOT/'content/locales').glob('*.json'))))).hexdigest()[:16]
@@ -99,8 +100,17 @@ def sanitize(p):
   target=box.select_one('.widget.movie')or box
   src=img.get('src','')if img else''
   target.clear();target['class']=['widget','movie','ys-video'];target.attrs.pop('style',None)
-  button=s.new_tag('button',type='button',attrs={'data-youtube':vid,'aria-label':'약석원 '+('좌훈'if vid=='eSqoQWNZdxw'else'건강밥'if vid=='v2MK2laprFI'else'체험')+' 소개 영상 재생'})
-  image=s.new_tag('img',src=src,alt='');button.append(image);play=s.new_tag('span',attrs={'class':'ys-play','aria-hidden':'true'});button.append(play);target.append(button)
+  button=s.new_tag('a',href='https://www.youtube.com/watch?v='+vid+'&autoplay=1',attrs={'class':'ys-video-link','data-video-id':vid,'target':'_blank','rel':'noopener noreferrer','aria-label':'유튜브에서 약석원 '+('좌훈'if vid=='eSqoQWNZdxw'else'건강밥'if vid=='v2MK2laprFI'else'소개')+' 영상 보기 (새 창)'})
+  image=s.new_tag('img',src=src,alt='');button.append(image);play=s.new_tag('span',attrs={'class':'ys-play','aria-hidden':'true'});button.append(play);target.append(button);badge=s.new_tag('span',attrs={'class':'ys-video-label','aria-hidden':'true'});badge.string='YouTube ↗';button.append(badge)
+ # Some captured pages already contain the previous thumbnail button.
+ for link in s.select('[data-youtube]'):
+  vid=link.attrs.pop('data-youtube');link.name='a';link.attrs.pop('type',None)
+  link['class']=['ys-video-link'];link['data-video-id']=vid;link['href']='https://www.youtube.com/watch?v='+vid+'&autoplay=1';link['target']='_blank';link['rel']='noopener noreferrer'
+  link['aria-label']='유튜브에서 약석원 '+('좌훈'if vid=='eSqoQWNZdxw'else'건강밥'if vid=='v2MK2laprFI'else'소개')+' 영상 보기 (새 창)'
+  badge=s.new_tag('span',attrs={'class':'ys-video-label','aria-hidden':'true'});badge.string='YouTube ↗';link.append(badge)
+ for text in list(s.find_all(string=True)):
+  if text.strip()in['썸네일을 눌러 약석원 좌훈 이야기를 만나보세요.','썸네일을 눌러 약석원 건강밥 이야기를 만나보세요.']:
+   text.replace_with('썸네일을 누르면 유튜브에서 '+('좌훈'if'좌훈'in text else'건강밥')+' 영상을 볼 수 있어요.')
  for card in s.select('[data-href]'):
   for a in card.select('a._fade_link'):a['href']=card['data-href']
  for b in s.select('button'):
@@ -205,6 +215,7 @@ def write_page(key,p,content=None):
  head+='<link rel="stylesheet" href="/assets/'+name+'"><link rel="stylesheet" href="/site.css?v='+RUNTIME_CSS_HASH+'">'
  body=content if content is not None else sanitize(p)
  if key=='food':body=food_ingredient_cards(body)
+ if key in['food','legacy-food','legacy-store']:body=rice_instructions(body)
  body=hero_motion(key,body)
  body=enhance(key,body)
  doc='<!doctype html><html lang="ko" data-page-key="'+html.escape(key,quote=True)+'" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" data-board-version="'+BOARD_CONTENT_HASH+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js?v='+RUNTIME_JS_HASH+'" defer></script></body></html>'

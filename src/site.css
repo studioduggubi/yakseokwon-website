@@ -726,3 +726,26 @@ html.ys-independent .ys-news-link>.card-body{display:block!important;min-width:0
 html.ys-independent .ys-news-link :is(.text_wrap,.title-block,.text-block){min-width:0!important;max-width:100%!important}
 html.ys-independent:not([lang="ko"]) .ys-news-grid .ysw-title{word-break:normal!important;overflow-wrap:break-word}
 html.ys-independent:not([lang="ko"]) #post_card_b202510194e9a3324b5869 :is(.ysw-title,.text.text-block){word-break:normal!important;overflow-wrap:break-word!important;text-wrap:wrap!important;line-break:strict}
+
+/* Native video links retain the original thumbnail layout and keyboard access. */
+html.ys-independent .ys-video .ys-video-link{display:block;width:100%;height:100%;position:absolute;inset:0;border:0;margin:0;padding:0;background:#fff;overflow:hidden}
+html.ys-independent .ys-video .ys-video-link:hover .ys-play{background:rgba(25,25,25,.88)}
+html.ys-independent .ys-video .ys-video-link:focus-visible{outline:3px solid #42683f;outline-offset:-4px}
+html.ys-independent .ys-video-label{position:absolute;right:12px;top:12px;padding:5px 9px;border-radius:5px;background:rgba(255,255,255,.92);color:#2d4932;font:600 11px/1.4 var(--ys-sans);letter-spacing:0}
+
+/* The existing illustrations remain intact; native clipping isolates each drawing.
+   Captions are real text, translated with the rest of the page. */
+html.ys-independent .ys-rice-instructions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;list-style:none;padding:0;margin:26px 0}
+html.ys-independent .ys-rice-step{min-width:0;background:#fff;border:1px solid var(--ys-line);border-radius:10px;overflow:hidden}
+html.ys-independent .ys-rice-step-art{display:block;position:relative;aspect-ratio:1100/736;overflow:hidden;background:#fff;margin:12px 12px 0}
+html.ys-independent .ys-rice-step-art img{display:block!important;position:absolute!important;width:174.545455%!important;max-width:none!important;height:auto!important;left:-67.272727%!important;top:0!important;margin:0!important;border-radius:0!important;object-fit:fill!important}
+html.ys-independent .ys-rice-step--2 .ys-rice-step-art img{top:-102.853261%!important}
+html.ys-independent .ys-rice-step--3 .ys-rice-step-art img{top:-207.201087%!important}
+html.ys-independent .ys-rice-step--4 .ys-rice-step-art img{top:-313.043478%!important}
+html.ys-independent .ys-rice-step--2 .ys-rice-step-art{clip-path:polygon(30% 0,100% 0,100% 100%,0 100%,0 25%,30% 25%)}
+html.ys-independent .ys-rice-step--4 .ys-rice-step-art{clip-path:polygon(12% 0,100% 0,100% 100%,0 100%,0 25%,12% 25%)}
+html.ys-independent .ys-rice-step-copy{padding:12px 14px 16px}
+html.ys-independent .ys-rice-step-number{display:block;color:#85917c;font:600 11px/1.4 var(--ys-sans);margin-bottom:6px}
+html.ys-independent.ys-designed .ys-content-section .ys-rice-instructions h3{font:600 15px/1.55 var(--ys-serif)!important;letter-spacing:-.01em!important;color:var(--ys-ink)!important;margin:0!important;word-break:normal!important;overflow-wrap:break-word}
+html.ys-independent.ys-designed .ys-content-section .ys-rice-instructions p{font:400 12px/1.65 var(--ys-sans)!important;color:var(--ys-muted)!important;margin:6px 0 0!important;word-break:normal!important;overflow-wrap:break-word}
+@media(max-width:991px){html.ys-independent .ys-rice-instructions{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}html.ys-independent .ys-rice-step-art{margin:10px 10px 0}html.ys-independent .ys-rice-step-copy{padding:10px 12px 14px}html.ys-independent.ys-designed .ys-content-section .ys-rice-instructions h3{font-size:14px!important}}
