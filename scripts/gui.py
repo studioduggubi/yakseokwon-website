@@ -152,7 +152,7 @@ def enhance(key,body):
    for text in list(h.find_all(string=True)):text.replace_with(str(text).replace('본딴','본뜬'))
  for image in doc.select('img[src]'):
   size=DIMENSIONS.get(image['src'])
-  if size:image['width']=str(size[0]);image['height']=str(size[1])
+  if size and not image.find_parent(['header','footer'])and not(image.has_attr('width')or image.has_attr('height')):image['width']=str(size[0]);image['height']=str(size[1])
  # The source duplicated desktop/sticky navigation IDs. No runtime relies on those IDs.
  ids={}
  for e in doc.select('[id]'):
