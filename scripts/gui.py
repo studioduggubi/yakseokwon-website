@@ -26,7 +26,6 @@ SECTIONS={
 ('s20250831745b0f79e4873','좋은 한 끼의 시작','정직한 재료로 만드는 건강한 밥','만드는 마음','white'),
 ('s202508318c66279bacdf6','곡물 하나하나, 정성껏','가족을 위한 마음으로, 가장 좋은 재료로','곡물 소개','soft'),
 ('s202508318fc100fe1710e','데워서 간편하게','전자레인지 3분, 따뜻한 건강밥','건강밥','white'),
-('s20251019888fa302fab4d','밥을 지을 때 한 포','매일의 밥상에 더하는 건강미','건강미','soft'),
 ('s20250831d8a568156473c','함께한 사람들의 이야기','한 번 드시면 다시 찾는 이유','제품 후기','white'),
 ('s20250831129c8141b6c35','믿고 선택하는 기준','제품의 품질을 확인하는 인증','인증 안내','soft')],
 'brand':[
@@ -134,6 +133,9 @@ def enhance(key,body):
   original=BeautifulSoup(body,'html.parser');body=str(original.select_one('header'))+(Path(__file__).resolve().parents[1]/'content/brand-page.html').read_text()+str(original.select_one('footer'))
  if key=='tea':body=tea_page(body)
  doc=BeautifulSoup(body,'html.parser')
+ if key=='food':
+  retired=doc.find(id='s20251019888fa302fab4d')
+  if retired:retired.decompose()
  # Remove comment UI completely; retain the article's previous/next navigation.
  for section in list(doc.select('.comment_section')):
   if section.select_one('.list_tap'):
@@ -204,8 +206,20 @@ def enhance(key,body):
  for p in doc.select('.ys-ingredient-description p,.ys-ingredients-intro>p:not(.ys-kicker)'):add(p,'ys-body')
  compact_components(doc,key)
  review_components(doc,key)
+ # Decorative title eyebrows are redundant; keep the actual headings and navigation.
+ for eyebrow in list(doc.select('.ys-kicker,.ys-bi-eyebrow,.ysw-eyebrow')):eyebrow.decompose()
+ # Ingredient illustrations are descriptive, not a link to a reservation ticket.
+ if key=='food':
+  for a in list(doc.select('a[href*="/products/3995890742"]')):
+   if a.select_one('img'):a.unwrap()
+  for a in doc.select('a[href]'):
+   if clean(a)=='약석원 제품 둘러보기':a['href']='https://smartstore.naver.com/barojukssal'
+ # Use the channel linked from the current official film.
+ for a in doc.select('a[href]'):
+  if 'youtube.com/@'in a['href'] and clean(a)=='약석원 유튜브 둘러보기':a['href']='https://www.youtube.com/@%EC%95%BD%EC%84%9D%EC%9B%90-p5n'
  # Correct reservation links which accidentally landed in reviews.
  for a in doc.select('a[href]'):
+  if a['href'].startswith('http://www.incheonnews.com/'):a['href']='https://www.incheonnews.com/'+a['href'].split('http://www.incheonnews.com/',1)[1]
   if '예약' in clean(a):a['href']=a['href'].replace('#REVIEW','')
   if a.get('target')=='_blank':a['rel']='noopener noreferrer'
   if a.get('href','').endswith('yakseokwon-logo-png.zip'):

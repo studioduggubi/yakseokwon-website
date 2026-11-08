@@ -21,6 +21,10 @@ parsed={f:BeautifulSoup(f.read_text(),'html.parser')for f in pages}
 for f in pages:
  text=f.read_text();s=parsed[f];source=str(f.relative_to(DIST))
  if len(s.select('h1'))!=1:errors.append([source,'expected one page heading'])
+ if any('&rarr'in e.get_text()or e.get_text().rstrip().endswith(' &')for e in s.select('.show_body')):errors.append([source,'malformed preview arrow entity'])
+ if s.select('.ys-kicker,.ys-bi-eyebrow,.ysw-eyebrow'):errors.append([source,'decorative title eyebrow remains'])
+ if s.html.get('data-page-key')=='food'and s.select('#s20251019888fa302fab4d,.ys-rice-instructions,.ys-page-nav a[href="#s20251019888fa302fab4d"]'):errors.append([source,'retired rice-mix section remains'])
+ if s.html.get('data-page-key')=='food'and s.select('a[href*="/products/3995890742"]'):errors.append([source,'food page links to reservation ticket'])
  if s.select('[data-youtube],.ys-video iframe'):errors.append([source,'embedded video playback remains'])
  if s.html.get('data-page-key')in['food','experience']and len(s.select('a.ys-video-link'))!=1:errors.append([source,'expected one native video link'])
  for video in s.select('a.ys-video-link'):

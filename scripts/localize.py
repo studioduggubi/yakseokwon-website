@@ -50,6 +50,14 @@ def translate(doc,strings,missing,context):
    node.replace_with(NavigableString(leading+translated+trailing))
   else:node[kind]=translated
 
+def clean_preview_entities(doc):
+ # Captured excerpts sometimes ended halfway through the arrow entity.
+ for preview in doc.select('.show_body'):
+  for node in list(preview.find_all(string=True)):
+   value=re.sub(r'&rarr;?','→',str(node))
+   if value.rstrip().endswith(' &'):value=value.rstrip()[:-1]+'→'
+   if value!=str(node):node.replace_with(NavigableString(value))
+
 def route_url(route,locale,base):return base+locale['prefix']+route
 
 def rewrite_links(doc,locale,base,routes):
@@ -124,17 +132,22 @@ def localize_site(root,dist,route_index,base):
    if code!='ko':
     script=doc.new_tag('script',src=base+runtime_files[code],attrs={'defer':''});main_script.insert_before(script)
    main_script.insert_before(doc.new_tag('script',src=base+'/i18n.js?v='+helper_hash,attrs={'defer':''}))
+   clean_preview_entities(doc)
    apply_metadata(doc,page,locale,locales,root,base,route)
    output_route=locale['prefix']+route;target=dist/output_route.strip('/')/'index.html';target.parent.mkdir(parents=True,exist_ok=True);target.write_text(str(doc))
    result.append({**page,'route':output_route,'locale':code,'title':doc.title.get_text()})
  # Every language gets its own searchable article text and preview markup.
- index=json.loads((dist/'data/boards.json').read_text())
+ index=json.loads((dist/'data/boards.json').read_text());sources_index=json.loads(json.dumps(index))
+ for rows in index.values():
+  for row in rows:
+   fragment=BeautifulSoup(row['html'],'html.parser');clean_preview_entities(fragment);row['html']=str(fragment)
+ (dist/'data/boards.json').write_text(json.dumps(index,ensure_ascii=False))
  for locale in locales:
   if locale['code']=='ko':continue
   strings=dictionaries[locale['code']];translated_index={kind:[]for kind in index}
   for kind,rows in index.items():
-   for row in rows:
-    fragment=BeautifulSoup(row['html'],'html.parser');translate(fragment,strings,missing,'search:'+locale['code']);rewrite_links(fragment,locale,base,routes)
+   for row_index,row in enumerate(rows):
+    fragment=BeautifulSoup(sources_index[kind][row_index]['html'],'html.parser');translate(fragment,strings,missing,'search:'+locale['code']);clean_preview_entities(fragment);rewrite_links(fragment,locale,base,routes)
     path=urllib.parse.urlsplit(row['url']).path;route=path[len(base):]if base else path
     article_path=dist/(locale['prefix']+route).strip('/')/'index.html';article=BeautifulSoup(article_path.read_text(),'html.parser')
     text=norm(fragment.get_text(' ',strip=True))+' '+' '.join(norm(n.get_text(' ',strip=True))for n in article.select('.view_tit,.board_txt_area'))
