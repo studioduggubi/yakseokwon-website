@@ -58,7 +58,7 @@ def explore(doc):
  if len(photos)!=3 or len(texts)!=5:raise ValueError('Home experience source changed')
  cards=[]
  for image,title,description,url in zip(photos,['강화 약쑥 좌훈','약식동원 건강식','차와 쉼'],texts[2:],['/Yakssuk/','/food/','/index2/']):
-  cards.append('<article class="ys-explore-card"><a href="'+url+'"><img src="'+image+'" alt="" loading="lazy"><div><h3>'+title+'</h3><p>'+html.escape(description)+'</p><span class="ys-text-link">자세히 알아보기 →</span></div></a></article>')
+  cards.append('<article class="ys-explore-card"><a href="'+url+'"><figure class="ys-explore-media"><img src="'+image+'" alt="" loading="lazy"></figure><div><h3>'+title+'</h3><p>'+html.escape(description)+'</p><span class="ys-text-link">자세히 알아보기 →</span></div></a></article>')
  replace_inside(section,'<div class="ys-section-intro"><p class="ys-kicker">세 가지 경험</p><h2 class="ys-section-title">몸을 돌보고, 일상을 채우는 시간</h2><p class="ys-body">몸과 마음을 돌보는 약석원의 체험과 먹거리를 만나보세요.</p></div><div class="ys-explore-grid">'+''.join(cards)+'</div>')
 
 def tea_page(body):
@@ -96,6 +96,10 @@ def review_components(doc,key):
 
 def compact_components(doc,key):
  if key=='food':
+  for index,figure in enumerate(doc.select('#ys-food-quality-v5 figure')):
+   image=figure.select_one(':scope>img')
+   if image:
+    image.extract();frame=tag(doc,'div',**{'class':'ys-quality-media'+(' ys-quality-art'if index in[1,3]else'')});frame.append(image);figure.insert(0,frame)
   catalogue=doc.select_one('.ys-food-ingredients')
   if catalogue:
    title=catalogue.select_one('h2');title.clear();title.string='가족을 위한 좋은 재료'

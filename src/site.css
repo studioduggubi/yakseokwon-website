@@ -654,3 +654,30 @@ html.ys-independent.ys-designed #s20250831c3dc1b0969b90 .ys-food-hero-copy p:las
  .ys-bi-wrap{padding-inline:24px}.ys-bi-hero{grid-template-columns:minmax(0,1fr) 82px;gap:12px}.ys-bi-page h1{font-size:22px}.ys-bi-signature{min-height:172px;padding-inline:8px}.ys-bi-signature>img{height:100px}.ys-bi-signature figcaption{font-size:8px}.ys-bi-page .ys-bi-lead{font-size:12px}
  .ys-bi-nav>a{font-size:10.5px;padding:9px}.ys-bi-meaning-card{grid-template-columns:80px minmax(0,1fr);gap:10px;padding:12px}.ys-bi-meaning-card h3{font-size:14px}.ys-bi-logo-stage{height:115px;padding:10px}.ys-bi-logo-stage>img{height:88px}.ys-bi-logo-wide>img{height:auto}.ys-bi-logo-grid h3{font-size:11px}.ys-bi-type-grid{grid-template-columns:minmax(0,1fr)}
 }
+
+/* Constrain card photos independently of their intrinsic HTML dimensions. */
+html.ys-independent.ys-designed .ys-explore-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+html.ys-independent.ys-designed .ys-explore-card>a{display:block;height:100%;color:inherit}
+html.ys-independent.ys-designed .ys-explore-media{position:relative;width:100%;height:auto;min-height:0;aspect-ratio:4/3;margin:0;padding:0;overflow:hidden}
+html.ys-independent.ys-designed .ys-explore-media>img{position:absolute;inset:0;display:block;width:100%!important;height:100%!important;min-height:0!important;max-height:none;aspect-ratio:auto!important;object-fit:cover;object-position:center}
+html.ys-independent.ys-designed #ys-food-quality-v5 .ys-quality-media{position:relative;width:100%;aspect-ratio:8/5;overflow:hidden;border-radius:7px;background:#fff}
+html.ys-independent.ys-designed #ys-food-quality-v5 .ys-quality-media>img{position:absolute;inset:0;display:block;width:100%!important;height:100%!important;min-height:0!important;object-fit:cover;border-radius:0!important}
+html.ys-independent.ys-designed #ys-food-quality-v5 .ys-quality-art>img{transform:scale(1.22)}
+html.ys-independent.ys-designed #s20250831c3dc1b0969b90>.ys-motion-bg{border:0!important;box-shadow:none!important;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 32px);mask-image:linear-gradient(to bottom,transparent,#000 32px)}
+@media(min-width:640px)and(max-width:991px){
+ html.ys-independent.ys-designed .ys-explore-grid{gap:16px}
+ html.ys-independent.ys-designed .ys-explore-card a>div{padding:16px}
+ html.ys-independent.ys-designed .ys-explore-card h3{font-size:16px;line-height:1.5}
+ html.ys-independent.ys-designed .ys-explore-card p{font-size:13px;line-height:1.65}
+}
+@media(max-width:639px){
+ html.ys-independent.ys-designed .ys-explore-grid{grid-template-columns:minmax(0,1fr);gap:12px}
+ html.ys-independent.ys-designed .ys-explore-card>a{display:grid;grid-template-columns:38% minmax(0,1fr);align-items:stretch}
+ html.ys-independent.ys-designed .ys-explore-media{height:100%;min-height:152px;aspect-ratio:auto}
+ html.ys-independent.ys-designed .ys-explore-card a>div{padding:14px}
+ html.ys-independent.ys-designed .ys-explore-card h3{font-size:16px;line-height:1.5;margin-bottom:8px}
+ html.ys-independent.ys-designed .ys-explore-card p{font-size:12.5px;line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:10px}
+}
+@media(max-width:580px){
+ html.ys-independent.ys-designed #ys-food-quality-v5 .ys-quality-media{width:70px;height:76px;aspect-ratio:auto}
+}
