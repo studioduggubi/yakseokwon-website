@@ -1,5 +1,6 @@
 """Validate generated routes, assets, base paths, and search exclusion."""
-import json,pathlib,re,urllib.parse,hashlib
+import json,pathlib,re,urllib.parse,hashlib,struct
+from metadata import ORIGIN,OG_LOCALES
 from collections import Counter
 from bs4 import BeautifulSoup
 ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
@@ -28,6 +29,38 @@ for f in pages:
   if video.get('target')!='_blank'or'noopener'not in video.get('rel',[]):errors.append([source,'unsafe external video link'])
  duplicates=[key for key,count in Counter(e['id']for e in s.select('[id]')).items()if count>1]
  if duplicates:errors.append([source,'duplicate IDs',duplicates])
+ # Sharing metadata must exist in the initial HTML, including every language route.
+ canonical=ORIGIN+BASE+'/'+str(f.parent.relative_to(DIST)).replace('\\','/').strip('./')
+ canonical=canonical.rstrip('/')+'/'
+ if len(s.select('head link[rel=canonical]'))!=1 or s.select_one('head link[rel=canonical]').get('href')!=canonical:errors.append([source,'invalid canonical'])
+ def metadata(name):
+  nodes=s.select('head meta[property="'+name+'"],head meta[name="'+name+'"]')
+  if len(nodes)!=1 or not nodes[0].get('content','').strip():errors.append([source,'missing or duplicate metadata',name]);return ''
+  return nodes[0]['content']
+ for name in ['og:title','og:description','og:type','og:url','og:site_name','og:locale','og:image','og:image:alt','og:image:width','og:image:height','og:image:type','twitter:card','twitter:title','twitter:description','twitter:image','twitter:image:alt','theme-color','description']:metadata(name)
+ if metadata('og:url')!=canonical or metadata('og:title')!=s.title.get_text():errors.append([source,'inconsistent sharing title or URL'])
+ if metadata('description')!=metadata('og:description') or metadata('twitter:description')!=metadata('description'):errors.append([source,'inconsistent descriptions'])
+ if metadata('twitter:card')!='summary_large_image' or metadata('og:image:type')!='image/jpeg':errors.append([source,'invalid sharing card format'])
+ if metadata('og:locale')!=OG_LOCALES[s.html['data-locale']]:errors.append([source,'wrong sharing language'])
+ image_url=metadata('og:image')
+ if image_url!=metadata('twitter:image') or not image_url.startswith(ORIGIN+BASE+'/social/'):errors.append([source,'invalid social image URL'])
+ else:
+  target=local_target(image_url,source)
+  if not target.exists():errors.append([source,'missing social image'])
+  if metadata('og:image:width')!='1200' or metadata('og:image:height')!='630':errors.append([source,'invalid social image dimensions'])
+ alternates=s.select('head link[rel=alternate][hreflang]')
+ if {e['hreflang']for e in alternates}!={'ko','en','zh-Hant','ja','x-default'} or len(alternates)!=5:errors.append([source,'incomplete language alternatives'])
+ for e in alternates:
+  path=urllib.parse.urlsplit(e['href']).path;target=local_target(path,source)
+  if not target.exists():errors.append([source,'missing language alternative',e['href']])
+  elif e['hreflang']!='x-default' and parsed.get(target) and parsed[target].html.get('lang')!=e['hreflang']:errors.append([source,'incorrect language alternative',e['href']])
+ for selector in ['head link[rel=icon][type="image/svg+xml"]','head link[rel=icon][sizes="96x96"]','head link[rel=apple-touch-icon][sizes="180x180"]','head link[rel=manifest]']:
+  if len(s.select(selector))!=1:errors.append([source,'missing browser metadata',selector])
+ structured=s.select('head script[type="application/ld+json"]')
+ try:
+  graph=json.loads(structured[0].get_text())['@graph'];webpage=next(n for n in graph if n['@type']=='WebPage')
+  if len(structured)!=1 or webpage['url']!=canonical or webpage['inLanguage']!=s.html['lang'] or webpage['name']!=s.title.get_text():errors.append([source,'inconsistent structured metadata'])
+ except (IndexError,KeyError,StopIteration,ValueError):errors.append([source,'invalid structured metadata'])
  for anchor in s.select('a[href]'):
   url=urllib.parse.urlsplit(anchor['href'])
   if url.scheme or url.netloc or not url.fragment:continue
@@ -44,7 +77,7 @@ for f in pages:
    u=e.get(k)
    if not u or u.startswith(('mailto:','tel:','#','data:','javascript:')):continue
    if u.startswith(('https:','http:','//')):
-    if e.name in['script','img','link','source','video']and(k!='href'or e.name=='link'):remote_resources.add(u)
+    if e.name in['script','img','link','source','video']and(k!='href'or e.name=='link')and not(e.name=='link'and set(e.get('rel',[]))&{'canonical','alternate'}):remote_resources.add(u)
     continue
    if u.startswith('/'):
     target=local_target(u,source);refs+=1

@@ -53,3 +53,12 @@ python3 -m http.server 4318 --bind 127.0.0.1 --directory dist
 SITE_BASE_PATH=/yakseokwon-website python3 scripts/build.py
 python3 scripts/verify.py
 ```
+
+
+### Sharing cards and browser identity
+
+- `content/metadata.json` owns the reviewed descriptions and social-card copy for Korean, English, Traditional Chinese and Japanese. `scripts/metadata.py` injects metadata after translation, directly into all 220 static HTML pages.
+- `content/social-images.json` maps eight page families to 32 versioned 1200 × 630 JPEG cards. News and event articles retain individual titles and body excerpts with their family card. `public/icons/` contains the original-logo SVG, 16/32/48 ICO, 96 PNG, 180 Apple touch icon and 192/512 icons. No service worker is installed.
+- `scripts/social_templates.py` prepares editable native HTML/CSS card originals under `reports/metadata-20261108/`. Render those with a browser after fonts and images load; the capture manifest specifies each card rectangle. The packaging script and visual evidence are preserved in that report folder in the working project. Keep original logo proportions and update the versioned image map whenever a card changes.
+- Canonical URLs, reciprocal language alternatives (including x-default), Open Graph, large-image Twitter cards and Organization/WebSite/WebPage JSON-LD all use the actual GitHub Pages base path. No review ratings, medical claims, offers or unpublished video URLs are added to structured data.
+- Search exclusion remains deliberate: every page has `noindex, nofollow, noarchive`; crawling stays allowed so crawlers can read that directive and sharing metadata. No sitemap submission or search registration is performed. Enabling search later is a separate release decision. KakaoTalk can retain old server and device previews even after the site is updated.

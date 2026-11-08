@@ -1,0 +1,236 @@
+{
+  "names": {
+    "ko": "약석원",
+    "en": "Yakseokwon",
+    "zh-TW": "藥石院",
+    "ja": "ヤクソグォン"
+  },
+  "home_titles": {
+    "ko": "약석원 | 강화 약쑥 좌훈·건강식·차와 쉼",
+    "en": "Yakseokwon | Mugwort Warming, Grain Meals & Tea in Ganghwa",
+    "zh-TW": "藥石院 | 江華艾草坐薰・健康餐食・茶與休憩",
+    "ja": "ヤクソグォン | 江華ヨモギ蒸し・健康食・お茶と休息"
+  },
+  "pages": {
+    "home": {
+      "ko": {
+        "label": "약석원",
+        "headline": "자연과 사람을 잇는\n약석원",
+        "description": "강화 약쑥의 온기와 정성으로 지은 건강식. 약석원의 좌훈 체험, 밥상과 차, 공간과 방문 안내를 만나보세요."
+      },
+      "en": {
+        "label": "Yakseokwon",
+        "headline": "Care, rooted\nin nature.",
+        "description": "Discover Yakseokwon in Ganghwa, Korea: traditional mugwort warming, wholesome grain meals, tea, and a welcoming space to rest."
+      },
+      "zh-TW": {
+        "label": "藥石院",
+        "headline": "連結自然與人\n藥石院",
+        "description": "從江華島艾草的溫暖，到用心烹煮的健康餐食。探索藥石院的艾草坐薰、餐食、茶飲與空間，以及來訪資訊。"
+      },
+      "ja": {
+        "label": "ヤクソグォン",
+        "headline": "自然と人をつなぐ\nヤクソグォン",
+        "description": "韓国・江華島のヨモギのぬくもりと、心を込めた食事。ヤクソグォンのヨモギ蒸し、健康食、お茶、空間とアクセスをご紹介します。"
+      }
+    },
+    "experience": {
+      "ko": {
+        "label": "강화 약쑥 좌훈 체험",
+        "headline": "강화 약쑥,\n따뜻한 쉼",
+        "description": "강화 사자발 약쑥과 옹기의 온기를 느끼는 약석원 좌훈 체험. 체험 과정과 이용 안내, 방문 후기를 확인하세요."
+      },
+      "en": {
+        "label": "Mugwort warming",
+        "headline": "Ganghwa mugwort.\nA warmer pause.",
+        "description": "Explore Yakseokwon’s traditional mugwort warming experience in Ganghwa, Korea, with Sajabal mugwort and earthenware. See the steps, visitor guidance and reviews."
+      },
+      "zh-TW": {
+        "label": "江華艾草坐薰體驗",
+        "headline": "江華艾草\n溫暖的休憩時光",
+        "description": "感受江華獅足艾草與陶甕的溫暖。了解藥石院艾草坐薰的體驗流程、來訪須知與體驗者分享。"
+      },
+      "ja": {
+        "label": "江華ヨモギ蒸し体験",
+        "headline": "江華のヨモギで\nあたたかなひと休み",
+        "description": "江華島のサジャバルヨモギと陶器のぬくもりを感じる、ヤクソグォンのヨモギ蒸し。体験の流れ、ご利用案内、お客様の声をご紹介します。"
+      }
+    },
+    "food": {
+      "ko": {
+        "label": "약식동원 건강식",
+        "headline": "정성으로 지은\n건강한 한 끼",
+        "description": "국내산 곡물을 정성껏 담은 약석원 건강식. 전자레인지로 간편하게 즐기는 건강밥과 밥 지을 때 더하는 건강미를 소개합니다."
+      },
+      "en": {
+        "label": "Wholesome grain meals",
+        "headline": "A wholesome meal,\nmade with care.",
+        "description": "Discover Yakseokwon’s grain meals made with Korean-grown ingredients, from ready-to-heat rice to grain mixes to add when cooking rice."
+      },
+      "zh-TW": {
+        "label": "藥食同源健康餐食",
+        "headline": "用心烹煮\n健康的一餐",
+        "description": "嚴選韓國在地穀物，用心製作藥石院健康餐食。認識方便加熱的健康飯，以及煮飯時加入的健康米配料。"
+      },
+      "ja": {
+        "label": "薬食同源の健康食",
+        "headline": "心を込めた\n健やかなひと皿",
+        "description": "韓国産の穀物を丁寧に詰めたヤクソグォンの健康食。手軽に温められるごはんと、炊飯時に加える穀物ミックスをご紹介します。"
+      }
+    },
+    "brand": {
+      "ko": {
+        "label": "브랜드 이야기",
+        "headline": "자연에서 시작한\n약석원의 정체성",
+        "description": "강화도의 실루엣, 마니산의 능선과 쌀알에 담긴 약석원의 브랜드 철학. 로고와 색, 서체에 담긴 의미를 살펴보세요."
+      },
+      "en": {
+        "label": "Brand story",
+        "headline": "Our roots.\nOur identity.",
+        "description": "Discover the ideas behind Yakseokwon’s identity: the outline of Ganghwa Island, Manisan’s ridgeline and a grain of rice, expressed through our logo, colours and type."
+      },
+      "zh-TW": {
+        "label": "品牌故事",
+        "headline": "源於自然\n藥石院的品牌識別",
+        "description": "從江華島輪廓、摩尼山稜線到一粒米，認識藥石院品牌識別的靈感，以及標誌、色彩與字體所承載的意義。"
+      },
+      "ja": {
+        "label": "ブランドストーリー",
+        "headline": "自然に根ざした\nブランドのかたち",
+        "description": "江華島の輪郭、摩尼山の稜線、米粒に込めたヤクソグォンの思い。ロゴ、色、書体に表れたブランドの背景をご紹介します。"
+      }
+    },
+    "directions": {
+      "ko": {
+        "label": "방문 안내",
+        "headline": "강화에서 만나는\n따뜻한 쉼",
+        "description": "강화도 약석원을 찾아오시는 길. 주소와 연락처, 교통편과 방문 안내를 확인하고 여유로운 쉼을 준비하세요."
+      },
+      "en": {
+        "label": "Plan your visit",
+        "headline": "Find your way\nto Ganghwa.",
+        "description": "Plan your visit to Yakseokwon in Ganghwa, Korea. Find our address, contact details and directions before you travel."
+      },
+      "zh-TW": {
+        "label": "來訪資訊",
+        "headline": "在江華島\n遇見溫暖的休憩",
+        "description": "準備前往江華島藥石院。查看地址、聯絡方式、交通與來訪資訊，安排一段悠閒的休憩時光。"
+      },
+      "ja": {
+        "label": "アクセス",
+        "headline": "江華島で過ごす\nやすらぎの時間",
+        "description": "韓国・江華島のヤクソグォンへのアクセス。住所、連絡先、交通手段、ご来訪案内をご確認いただけます。"
+      }
+    },
+    "resources": {
+      "ko": {
+        "label": "행사 일정",
+        "headline": "약석원과 만나는\n다음 이야기",
+        "description": "박람회와 지역 행사에서 약석원을 만나보세요. 참가 일정과 장소, 공식 포스터와 지난 행사 소식을 모았습니다."
+      },
+      "en": {
+        "label": "Events",
+        "headline": "Meet us\nalong the way.",
+        "description": "Meet Yakseokwon at exhibitions and community events. Explore participation dates, venues, official posters and stories from past events."
+      },
+      "zh-TW": {
+        "label": "活動日程",
+        "headline": "與藥石院相遇\n下一段故事",
+        "description": "在展覽與地方活動中認識藥石院。查看參展日期、地點、官方海報及過往活動消息。"
+      },
+      "ja": {
+        "label": "イベント情報",
+        "headline": "次の出会いを\nヤクソグォンと",
+        "description": "展示会や地域のイベントでヤクソグォンに出会いませんか。参加日程、会場、公式ポスター、過去の活動をご案内します。"
+      }
+    },
+    "newsroom": {
+      "ko": {
+        "label": "뉴스룸",
+        "headline": "차곡차곡 쌓아온\n약석원의 이야기",
+        "description": "언론 보도와 수상, 공공기관 선정 소식으로 살펴보는 약석원의 발자취. 기사별 내용과 관련 자료를 확인하세요."
+      },
+      "en": {
+        "label": "Newsroom",
+        "headline": "Stories from\nYakseokwon.",
+        "description": "Explore Yakseokwon’s journey through press coverage, awards and public-sector recognition, with individual stories and related materials."
+      },
+      "zh-TW": {
+        "label": "新聞室",
+        "headline": "一路累積的\n藥石院故事",
+        "description": "透過媒體報導、獲獎與公部門評選消息，了解藥石院的足跡。查看各篇內容與相關資料。"
+      },
+      "ja": {
+        "label": "ニュースルーム",
+        "headline": "歩みを重ねた\nヤクソグォンの物語",
+        "description": "メディア掲載、受賞、公的機関による選定のニュースを通して、ヤクソグォンの歩みと関連資料をご紹介します。"
+      }
+    },
+    "tea": {
+      "ko": {
+        "label": "차와 쉼",
+        "headline": "차 한 잔에 담은\n고요한 시간",
+        "description": "우리 땅의 약재와 전통을 담은 약석원의 차. 따뜻한 차 한 잔과 함께 천천히 쉬어가는 시간을 만나보세요."
+      },
+      "en": {
+        "label": "Tea & rest",
+        "headline": "A cup of tea.\nA quiet moment.",
+        "description": "Discover tea at Yakseokwon, drawing on Korean ingredients and tradition. Take a quiet moment and enjoy the warmth of a cup of tea."
+      },
+      "zh-TW": {
+        "label": "茶與休憩",
+        "headline": "一杯茶\n片刻的寧靜",
+        "description": "藥石院的茶飲，融入韓國在地原料與傳統。以一杯溫暖的茶，享受慢下來的休憩時光。"
+      },
+      "ja": {
+        "label": "お茶と休息",
+        "headline": "一杯のお茶と\n静かなひととき",
+        "description": "韓国の素材と伝統を大切にしたヤクソグォンのお茶。あたたかな一杯とともに、ゆっくりとした時間をお楽しみください。"
+      }
+    },
+    "terms": {
+      "ko": {
+        "label": "약석원",
+        "headline": "자연과 사람을 잇는\n약석원",
+        "description": "약석원 웹사이트의 이용약관을 확인하세요."
+      },
+      "en": {
+        "label": "Yakseokwon",
+        "headline": "Care, rooted\nin nature.",
+        "description": "Read the terms of use for the Yakseokwon website."
+      },
+      "zh-TW": {
+        "label": "藥石院",
+        "headline": "連結自然與人\n藥石院",
+        "description": "查看藥石院網站的使用條款。"
+      },
+      "ja": {
+        "label": "ヤクソグォン",
+        "headline": "自然と人をつなぐ\nヤクソグォン",
+        "description": "ヤクソグォンのウェブサイト利用規約をご確認ください。"
+      }
+    },
+    "privacy": {
+      "ko": {
+        "label": "약석원",
+        "headline": "자연과 사람을 잇는\n약석원",
+        "description": "약석원 웹사이트의 개인정보처리방침을 확인하세요."
+      },
+      "en": {
+        "label": "Yakseokwon",
+        "headline": "Care, rooted\nin nature.",
+        "description": "Read the privacy policy for the Yakseokwon website."
+      },
+      "zh-TW": {
+        "label": "藥石院",
+        "headline": "連結自然與人\n藥石院",
+        "description": "查看藥石院網站的隱私權政策。"
+      },
+      "ja": {
+        "label": "ヤクソグォン",
+        "headline": "自然と人をつなぐ\nヤクソグォン",
+        "description": "ヤクソグォンのウェブサイトのプライバシーポリシーをご確認ください。"
+      }
+    }
+  }
+}

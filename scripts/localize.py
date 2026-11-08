@@ -3,6 +3,7 @@ import hashlib,html,json,re,urllib.parse
 from pathlib import Path
 from bs4 import BeautifulSoup,Comment,NavigableString
 from media_links import localize_videos
+from metadata import apply_metadata
 KR=re.compile('[가-힣]')
 BLOCKS=['h1','h2','h3','h4','h5','h6','p','label','legend','option']
 def norm(text):return re.sub(r'\s+',' ',str(text)).strip()
@@ -123,6 +124,7 @@ def localize_site(root,dist,route_index,base):
    if code!='ko':
     script=doc.new_tag('script',src=base+runtime_files[code],attrs={'defer':''});main_script.insert_before(script)
    main_script.insert_before(doc.new_tag('script',src=base+'/i18n.js?v='+helper_hash,attrs={'defer':''}))
+   apply_metadata(doc,page,locale,locales,root,base,route)
    output_route=locale['prefix']+route;target=dist/output_route.strip('/')/'index.html';target.parent.mkdir(parents=True,exist_ok=True);target.write_text(str(doc))
    result.append({**page,'route':output_route,'locale':code,'title':doc.title.get_text()})
  # Every language gets its own searchable article text and preview markup.
