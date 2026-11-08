@@ -366,6 +366,8 @@ html.ys-independent.ys-designed .ys-section-intro,html.ys-independent.ys-designe
 html.ys-independent.ys-designed .ys-body,html.ys-independent.ys-designed .ys-body span,html.ys-independent.ys-designed .ys-content-section [data-widget-type=text] p:not(.ys-kicker):not(.ys-review-rating),html.ys-independent.ys-designed .ys-content-section [data-widget-type=text] p:not(.ys-kicker):not(.ys-review-rating) span{font-size:14.5px!important;line-height:1.75!important}
 html.ys-independent.ys-designed .ys-body{margin-bottom:12px!important}
 html.ys-independent.ys-designed .ys-body+.ys-body{margin-top:12px!important}
+/* Story paragraphs already provide a 12px gap; avoid adding the widget gap again. */
+html.ys-independent.ys-designed #s20250827ed93354d7f794 .widget_text_wrap:has(.ys-body){margin-bottom:0!important}
 html.ys-independent.ys-designed .ys-content-section .ys-item-title{font-size:18px!important;line-height:1.45!important;margin-bottom:9px!important}
 html.ys-independent.ys-designed .ys-page-hero .ys-hero-title{font-size:34px!important;line-height:1.45!important}
 html.ys-independent.ys-designed .ys-page-hero p,html.ys-independent.ys-designed .ys-page-hero p span{font-size:15px!important;line-height:1.75!important}
