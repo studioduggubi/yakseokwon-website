@@ -689,3 +689,6 @@ html.ys-independent.ys-designed .ys-grain-photo>img{display:block;width:100%!imp
 html.ys-independent.ys-designed .ys-event-body>img{display:block;width:100%;max-width:640px;height:auto;margin:20px 0 28px;border-radius:10px}
 html.ys-independent.ys-designed .ys-event-status{display:inline-block;padding:5px 12px;margin:0;border-radius:20px;background:#edf2e8;color:#3e633b;font-size:13px;font-weight:600}
 html.ys-independent.ys-designed .ys-event-body p{max-width:66ch}
+
+/* A captured Imweb scroll position must not become a permanently fixed header. */
+html.ys-independent #doz_header_wrap .new_org_header .scroll-to-fixed-fixed2{position:relative!important;top:auto!important;left:auto!important;width:100%!important;margin-left:0!important}
