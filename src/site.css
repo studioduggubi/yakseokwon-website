@@ -500,3 +500,50 @@ html.ys-independent.ys-designed #ys-food-quality-v5{margin:12px 0 0!important}
  html.ys-independent.ys-designed .ys-news-grid .ysw-title{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 }
 html.ys-independent.ys-designed #container_w2025082915f1675319bb0 .text_wrap p,html.ys-independent.ys-designed #container_w20250831c7a044df617b7 .text_wrap p{font-size:13px!important;line-height:1.7!important}
+
+/* Image breathing room, contained food hero and complete review controls. */
+html.ys-independent.ys-designed #ys-food-quality-v5 figure{padding:10px!important;border-radius:10px!important;gap:12px!important;align-items:center;background:#fafbf7!important}
+html.ys-independent.ys-designed #ys-food-quality-v5 figure>img{display:block;border-radius:7px!important;overflow:hidden;width:100%!important}
+html.ys-independent.ys-designed #ys-food-quality-v5 figcaption{padding:4px!important;background:transparent!important}
+html.ys-independent.ys-designed #s20250831c3dc1b0969b90{display:flex!important;flex-direction:column;align-items:center;padding:40px 28px 20px!important;background:#fff!important}
+html.ys-independent.ys-designed #s20250831c3dc1b0969b90>main{order:0;width:100%}
+html.ys-independent.ys-designed #s20250831c3dc1b0969b90>.section_bg_color{display:none!important}
+html.ys-independent.ys-designed #s20250831c3dc1b0969b90>.ys-motion-bg{order:1;position:relative!important;inset:auto!important;flex:none;width:min(100%,420px)!important;height:260px!important;margin:16px auto 0!important;background-image:none!important;overflow:hidden;clip-path:none!important;pointer-events:none}
+html.ys-independent.ys-designed #s20250831c3dc1b0969b90 .ys-hero-motion,html.ys-independent.ys-designed #s20250831c3dc1b0969b90 .ys-hero-mobile-motion{position:absolute!important;inset:auto!important;left:-40%!important;bottom:0!important;width:180%!important;max-width:none!important;height:auto!important;object-fit:contain!important}
+html.ys-independent.ys-designed #s20250831c3dc1b0969b90 .ys-food-hero-copy p:last-child{margin-bottom:0!important}
+.ys-review-gallery{width:100%;min-width:0;max-width:100%;margin:16px 0 24px}
+.ys-review-track{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding:2px 0 4px}
+.ys-review-track::-webkit-scrollbar{display:none}
+.ys-review-card{display:block;flex:0 0 calc((100% - 24px)/3);min-width:0;scroll-snap-align:start;text-align:left;background:#fff;border:1px solid var(--ys-line);border-radius:10px;overflow:hidden;padding:0;color:var(--ys-ink);cursor:pointer;font-family:var(--ys-sans)}
+.ys-review-card>img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover}
+.ys-review-copy{display:block;padding:12px}
+.ys-review-stars{display:block;font:500 13px/1.5 var(--ys-sans);letter-spacing:1px;color:#637257;margin:0 0 6px}
+.ys-review-text{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;font:400 13px/1.65 var(--ys-sans);color:var(--ys-muted);word-break:keep-all;overflow-wrap:anywhere}
+.ys-review-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}
+.ys-review-hint{font:400 11px/1.6 var(--ys-sans);color:var(--ys-muted);margin:0}
+.ys-review-nav,.ys-review-dialog-nav{display:flex;align-items:center;gap:8px;flex:none;font:400 12px/1.4 var(--ys-sans)}
+.ys-review-nav>button,.ys-review-dialog-nav>button{display:grid;place-items:center;width:40px;height:40px;border:1px solid #dbe0d5;background:#fff;border-radius:50%;color:#41543c;font:24px/1 var(--ys-sans);cursor:pointer}
+.ys-review-count{min-width:49px;text-align:center;color:var(--ys-muted);font-variant-numeric:tabular-nums}
+.ys-review-open{overflow:hidden!important}
+.ys-review-dialog{padding:0;width:min(520px,calc(100vw - 32px));max-width:none;max-height:calc(100dvh - 40px);border:0;border-radius:14px;background:white;color:var(--ys-ink);overflow:auto;box-shadow:0 20px 80px #0003}
+.ys-review-dialog::backdrop{background:#172117b8}
+.ys-review-dialog-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--ys-line);gap:16px}
+.ys-review-dialog-head h2{font:600 17px/1.5 var(--ys-serif);margin:0}
+.ys-review-dialog-head button{border:0;border-radius:50%;background:#f2f4ef;color:var(--ys-ink);width:40px;height:40px;font:27px/1 var(--ys-sans);cursor:pointer;flex:none}
+.ys-review-dialog-body{padding:16px 20px 12px}
+.ys-review-dialog-body>img{display:block;width:100%;max-height:min(45dvh,400px);object-fit:contain;border-radius:8px;margin-bottom:16px}
+.ys-review-full-text{font:400 15px/1.8 var(--ys-sans);color:var(--ys-ink);margin:0;word-break:keep-all;overflow-wrap:anywhere}
+.ys-review-dialog-nav{padding:0 20px 16px;justify-content:center;gap:20px}
+@media(max-width:991px){
+ html.ys-independent.ys-designed #s20250831c3dc1b0969b90{padding:32px 28px 16px!important}
+ html.ys-independent.ys-designed #s20250831c3dc1b0969b90>.ys-motion-bg{width:min(100%,320px)!important;height:220px!important;margin-top:18px!important}
+ .ys-review-card{flex-basis:calc((100% - 12px)/2)}
+ .ys-review-controls{align-items:flex-start}.ys-review-hint{max-width:145px;padding-top:6px}
+}
+@media(max-width:580px){
+ html.ys-independent.ys-designed #ys-food-quality-v5 figure{grid-template-columns:70px minmax(0,1fr)!important}
+ html.ys-independent.ys-designed #ys-food-quality-v5 figure>img{width:70px!important;height:76px!important}
+ html.ys-independent.ys-designed #ys-food-quality-v5 figcaption{padding:0!important}
+ .ys-review-copy{padding:10px}.ys-review-text{font-size:12px}.ys-review-stars{font-size:12px}
+}
+@media(max-width:350px){.ys-review-controls{gap:6px}.ys-review-nav{gap:3px}.ys-review-nav>button{width:36px;height:40px}.ys-review-hint{max-width:120px;font-size:10px}}

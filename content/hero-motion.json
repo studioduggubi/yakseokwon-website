@@ -13,7 +13,8 @@
     "mobile_width": 960,
     "mobile_height": 668,
     "mobile_frames": 90,
-    "mobile_loop": 0
+    "mobile_loop": 0,
+    "controls": false
   },
   "experience": {
     "section": "s202508288408bd2e272a9",
@@ -29,7 +30,8 @@
     "mobile_width": 960,
     "mobile_height": 594,
     "mobile_frames": 90,
-    "mobile_loop": 0
+    "mobile_loop": 0,
+    "controls": false
   },
   "food": {
     "section": "s20250831c3dc1b0969b90",

@@ -65,6 +65,35 @@ def tea_page(body):
  doc=BeautifulSoup(body,'html.parser');head=doc.select_one('header');foot=doc.select_one('footer')
  return str(head)+'''<main id="ys-main" class="ys-tea-page"><section class="ys-tea-hero"><img src="/assets/e868746e1cf9608f99.png" alt="따뜻한 차를 찻잔에 따르는 모습"><div><p class="ys-kicker">약석원의 세 가지 경험</p><h1>차 한 잔과 함께,<br>고요하게 쉬어가는 시간</h1><p>우리 땅의 약재와 전통을 담은 차는 몸을 맑히고 마음을 고요히 하며, 쉼과 명상을 선사하는 치유의 시간입니다.</p></div></section><section class="ys-tea-content"><p class="ys-kicker">차와 쉼</p><h2>좌훈의 온기와 함께 즐기는 차</h2><p>약석원의 좌훈 체험에서는 따뜻한 약쑥차도 함께 즐길 수 있습니다. 몸을 돌보는 시간에 차 한 잔의 여유를 더해보세요.</p><div class="ys-visit-actions"><a class="ys-button" href="/Yakssuk/">좌훈 체험 알아보기 →</a><a class="ys-button ys-button-outline" href="tel:0329375338">체험 문의 032-937-5338</a></div></section></main>'''+str(foot)
 
+def review_components(doc,key):
+ gallery_id={'food':'container_w20250831c7a044df617b7','experience':'container_w2025082915f1675319bb0'}.get(key)
+ gallery=doc.find(id=gallery_id)if gallery_id else None
+ if gallery is None:return
+ label='제품 후기'if key=='food'else'좌훈 체험 후기'
+ rows=[]
+ for item in gallery.select('.owl-item:not(.cloned)'):
+  image=item.select_one('.img_wrap');text=item.select_one('.text_wrap .body')
+  match=re.search(r'url\([\"\']?(.*?)[\"\']?\)',image.get('style',''))if image else None
+  if not match or text is None:raise ValueError('Review source changed: '+gallery_id)
+  rows.append((match.group(1),clean(text)))
+ if len(rows)<3:raise ValueError('Expected complete review collection')
+ gallery.clear();gallery.attrs={'id':gallery_id,'class':['ys-review-gallery'],'role':'region','aria-label':label,'data-review-gallery':''}
+ track=tag(doc,'div',**{'class':'ys-review-track','id':gallery_id+'-track','tabindex':'0','aria-label':label+' 목록. 좌우로 넘겨보세요.'})
+ for index,(src,text)in enumerate(rows,1):
+  button=tag(doc,'button',type='button',**{'class':'ys-review-card','aria-label':str(index)+'번째 '+label+' 자세히 보기','data-review-open':''})
+  button.append(tag(doc,'img',src=src,alt=label+' 사진 '+str(index),loading='lazy',decoding='async',width='600',height='600'))
+  copy=tag(doc,'span',**{'class':'ys-review-copy'})
+  copy.append(tag(doc,'span','★★★★★',**{'class':'ys-review-stars','aria-label':'별점 5점'}))
+  copy.append(tag(doc,'span',text,**{'class':'ys-review-text'}));button.append(copy);track.append(button)
+ gallery.append(track)
+ controls=tag(doc,'div',**{'class':'ys-review-controls'})
+ controls.append(tag(doc,'p','사진을 누르면 후기 전문을 볼 수 있어요.',**{'class':'ys-review-hint'}))
+ nav=tag(doc,'div',**{'class':'ys-review-nav'})
+ nav.append(tag(doc,'button','‹',type='button',**{'data-review-prev':'','aria-label':'이전 후기','aria-controls':track['id']}))
+ nav.append(tag(doc,'span','1–2 / '+str(len(rows)),**{'class':'ys-review-count','role':'status','aria-live':'polite'}))
+ nav.append(tag(doc,'button','›',type='button',**{'data-review-next':'','aria-label':'다음 후기','aria-controls':track['id']}))
+ controls.append(nav);gallery.append(controls)
+
 def compact_components(doc,key):
  if key=='food':
   catalogue=doc.select_one('.ys-food-ingredients')
@@ -159,6 +188,7 @@ def enhance(key,body):
      if clean(emphasis)==clean(p):emphasis.unwrap()
  for p in doc.select('.ys-ingredient-description p,.ys-ingredients-intro>p:not(.ys-kicker)'):add(p,'ys-body')
  compact_components(doc,key)
+ review_components(doc,key)
  # Correct reservation links which accidentally landed in reviews.
  for a in doc.select('a[href]'):
   if '예약' in clean(a):a['href']=a['href'].replace('#REVIEW','')

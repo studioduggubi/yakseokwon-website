@@ -144,3 +144,35 @@ document.querySelectorAll('[data-hero-motion]').forEach(section=>{
 
 // The contents bar also indicates the section currently being read.
 document.querySelectorAll('.ys-page-nav').forEach(nav=>{const links=[...nav.querySelectorAll('a[href^="#"]')],targets=links.map(a=>document.getElementById(a.hash.slice(1))).filter(Boolean);const update=()=>{const current=targets.filter(s=>s.getBoundingClientRect().top<180).pop()||targets[0];links.forEach(a=>{if(a.hash==='#'+current?.id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});};addEventListener('scroll',update,{passive:true});update();});
+
+
+// Reviews have their own native scroller and on-site detail view.
+const reviewDialog=document.createElement('dialog');
+reviewDialog.className='ys-review-dialog';reviewDialog.setAttribute('aria-labelledby','ys-review-dialog-title');
+reviewDialog.innerHTML='<div class="ys-review-dialog-head"><h2 id="ys-review-dialog-title">후기 자세히 보기</h2><button type="button" data-review-close aria-label="후기 닫기">×</button></div><div class="ys-review-dialog-body"><img alt=""><p class="ys-review-stars" aria-label="별점 5점">★★★★★</p><p class="ys-review-full-text"></p></div><div class="ys-review-dialog-nav"><button type="button" data-review-detail-prev aria-label="이전 후기">‹</button><span role="status" aria-live="polite"></span><button type="button" data-review-detail-next aria-label="다음 후기">›</button></div>';
+document.body.append(reviewDialog);
+let activeReviewCards=[],activeReviewIndex=0,reviewOpener;
+function openReview(index){
+ activeReviewIndex=(index+activeReviewCards.length)%activeReviewCards.length;
+ const card=activeReviewCards[activeReviewIndex],image=card.querySelector('img'),detail=reviewDialog.querySelector('img');
+ detail.src=image.currentSrc||image.src;detail.alt=image.alt;
+ reviewDialog.querySelector('.ys-review-full-text').textContent=card.querySelector('.ys-review-text').textContent;
+ reviewDialog.querySelector('.ys-review-dialog-nav span').textContent=(activeReviewIndex+1)+' / '+activeReviewCards.length;
+ if(!reviewDialog.open){reviewDialog.showModal();document.body.classList.add('ys-review-open');reviewDialog.querySelector('[data-review-close]').focus();}
+}
+reviewDialog.querySelector('[data-review-close]').addEventListener('click',()=>reviewDialog.close());
+reviewDialog.querySelector('[data-review-detail-prev]').addEventListener('click',()=>openReview(activeReviewIndex-1));
+reviewDialog.querySelector('[data-review-detail-next]').addEventListener('click',()=>openReview(activeReviewIndex+1));
+reviewDialog.addEventListener('click',e=>{if(e.target===reviewDialog)reviewDialog.close();});
+reviewDialog.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();openReview(activeReviewIndex-1);}if(e.key==='ArrowRight'){e.preventDefault();openReview(activeReviewIndex+1);}});
+reviewDialog.addEventListener('close',()=>{document.body.classList.remove('ys-review-open');reviewOpener?.focus({preventScroll:true});});
+document.querySelectorAll('[data-review-gallery]').forEach(gallery=>{
+ const track=gallery.querySelector('.ys-review-track'),cards=[...gallery.querySelectorAll('[data-review-open]')],count=gallery.querySelector('.ys-review-count');
+ const visible=()=>Math.max(1,Math.round((track.clientWidth+12)/(cards[0].offsetWidth+12)));
+ const update=()=>{const first=Math.min(cards.length-1,Math.round(track.scrollLeft/(cards[0].offsetWidth+12)));count.textContent=(first+1)+'–'+Math.min(cards.length,first+visible())+' / '+cards.length;};
+ const move=direction=>{const end=track.scrollWidth-track.clientWidth;let left=direction<0?(track.scrollLeft<2?end:Math.max(0,track.scrollLeft-track.clientWidth-12)):(track.scrollLeft>end-2?0:Math.min(end,track.scrollLeft+track.clientWidth+12));track.scrollTo({left,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});};
+ gallery.querySelector('[data-review-prev]').addEventListener('click',()=>move(-1));gallery.querySelector('[data-review-next]').addEventListener('click',()=>move(1));
+ track.addEventListener('scroll',update,{passive:true});track.addEventListener('keydown',e=>{if(e.target!==track)return;if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();move(e.key==='ArrowLeft'?-1:1);}});
+ cards.forEach((card,index)=>card.addEventListener('click',()=>{activeReviewCards=cards;reviewOpener=card;openReview(index);}));
+ addEventListener('resize',update,{passive:true});update();
+});
