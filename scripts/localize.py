@@ -1,6 +1,7 @@
 """Build static language pages using reviewed, versioned local copy dictionaries."""
 import hashlib,html,json,re,urllib.parse
 from pathlib import Path
+from datetime import date
 from bs4 import BeautifulSoup,Comment,NavigableString
 from media_links import localize_videos
 from metadata import apply_metadata
@@ -57,6 +58,32 @@ def clean_preview_entities(doc):
    value=re.sub(r'&rarr;?','→',str(node))
    if value.rstrip().endswith(' &'):value=value.rstrip()[:-1]+'→'
    if value!=str(node):node.replace_with(NavigableString(value))
+
+EVENT_NAV_LABELS={'ko':('이전 행사','다음 행사'),'en':('Previous event','Next event'),'zh-TW':('上一場活動','下一場活動'),'ja':('前のイベント','次のイベント')}
+
+def chronological_event_navigation(dist,pages,locales,base):
+ # Events use their start date, not the descending board's previous/next labels.
+ rows=json.loads((dist/'data/boards.json').read_text())['events']
+ def start(row):
+  text=BeautifulSoup(row['html'],'html.parser').get_text(' ',strip=True)
+  match=re.search(r'\b(20\d{2})\.(\d{2})\.(\d{2})',text)
+  if not match:raise ValueError('Event start date missing: '+row['url'])
+  return date(*map(int,match.groups()))
+ ordered=sorted(rows,key=start,reverse=True)
+ routes=[urllib.parse.urlsplit(row['url']).path[len(base):]for row in ordered]
+ expected={p['route']for p in pages if p['key'].startswith('post-event-')}
+ if len(routes)!=len(set(routes))or set(routes)!=expected:raise ValueError('Event list and detail pages differ')
+ for locale in locales:
+  docs={route:BeautifulSoup((dist/(locale['prefix']+route).strip('/')/'index.html').read_text(),'html.parser')for route in routes}
+  titles={route:norm(doc.select_one('.view_tit').get_text(' ',strip=True))for route,doc in docs.items()}
+  for index,route in enumerate(routes):
+   doc=docs[route];nav=doc.select_one('.list_tap')
+   if nav is None:raise ValueError('Event navigation missing: '+route)
+   nav.clear()
+   for relation,target_index,label in [('prev',index+1,EVENT_NAV_LABELS[locale['code']][0]),('next',index-1,EVENT_NAV_LABELS[locale['code']][1])]:
+    if not 0<=target_index<len(routes):continue
+    target_route=routes[target_index];link=doc.new_tag('a',href=base+locale['prefix']+target_route,rel=relation);link.string=label+' · '+titles[target_route];nav.append(link)
+   (dist/(locale['prefix']+route).strip('/')/'index.html').write_text(str(doc))
 
 def route_url(route,locale,base):return base+locale['prefix']+route
 
@@ -136,6 +163,7 @@ def localize_site(root,dist,route_index,base):
    apply_metadata(doc,page,locale,locales,root,base,route)
    output_route=locale['prefix']+route;target=dist/output_route.strip('/')/'index.html';target.parent.mkdir(parents=True,exist_ok=True);target.write_text(str(doc))
    result.append({**page,'route':output_route,'locale':code,'title':doc.title.get_text()})
+ chronological_event_navigation(dist,route_index,locales,base)
  # Every language gets its own searchable article text and preview markup.
  index=json.loads((dist/'data/boards.json').read_text());sources_index=json.loads(json.dumps(index))
  for rows in index.values():

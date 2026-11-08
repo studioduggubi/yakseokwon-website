@@ -105,6 +105,27 @@ for rows in index.values():
  for row in rows:
   target=local_target(row['url'],'board search')
   if target is not None and not target.exists():errors.append(['board search','missing post',row['url']])
-report={'pages':len(pages),'base_path':BASE,'noindex_pages':noindex_pages,'checked_local_references':refs,'board_entries':{k:len(v)for k,v in index.items()},'remote_resource_dependencies':sorted(remote_resources),'errors':errors}
+# The reported G-FAIR case and all event edges follow event start dates.
+from datetime import date
+from localize import EVENT_NAV_LABELS
+calendar=[]
+for row in index['events']:
+ text=BeautifulSoup(row['html'],'html.parser').get_text(' ',strip=True);match=re.search(r'\b(20\d{2})\.(\d{2})\.(\d{2})',text)
+ if not match:errors.append(['events','missing event start date',row['url']]);continue
+ calendar.append((date(*map(int,match.groups())),row['url']))
+calendar.sort(key=lambda row:row[0],reverse=True)
+event_edges=0
+for code,prefix in [('ko',''),('en','/en'),('zh-TW','/zh-TW'),('ja','/ja')]:
+ for position,(_,url)in enumerate(calendar):
+  route=prefix+url[len(BASE):];source=route;doc=parsed[DIST/route.strip('/')/'index.html'];actual=[];expected=[]
+  for anchor in doc.select('.list_tap>a'):
+   relation=' '.join(anchor.get('rel',[]));actual.append((relation,anchor.get('href')))
+   label=EVENT_NAV_LABELS[code][0 if relation=='prev'else 1]
+   if not anchor.get_text(' ',strip=True).startswith(label+' · '):errors.append([source,'incorrect event direction label'])
+   event_edges+=1
+  for relation,neighbor in [('prev',position+1),('next',position-1)]:
+   if 0<=neighbor<len(calendar):expected.append((relation,BASE+prefix+calendar[neighbor][1][len(BASE):]))
+  if actual!=expected:errors.append([source,'event chronology mismatch',actual,expected])
+report={'pages':len(pages),'base_path':BASE,'noindex_pages':noindex_pages,'checked_local_references':refs,'board_entries':{k:len(v)for k,v in index.items()},'event_navigation_edges':event_edges,'remote_resource_dependencies':sorted(remote_resources),'errors':errors}
 (ROOT/'reports/verification.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2))
 if errors or remote_resources:raise SystemExit(1)
