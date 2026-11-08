@@ -24,7 +24,7 @@ for f in pages:
  for e in s.find_all(True):
   for k in e.attrs:
    if k.startswith('on'):errors.append([source,'inline handler',k])
-  for k in['src','poster','href','data-href']:
+  for k in['src','poster','href','data-href','data-motion-src']:
    u=e.get(k)
    if not u or u.startswith(('mailto:','tel:','#','data:','javascript:')):continue
    if u.startswith(('https:','http:','//')):
@@ -33,6 +33,13 @@ for f in pages:
    if u.startswith('/'):
     target=local_target(u,source);refs+=1
     if target is not None and not target.exists():errors.append([source,k,u])
+  for candidate in e.get('srcset','').split(','):
+   u=candidate.strip().split(' ')[0]
+   if not u:continue
+   if u.startswith(('https:','http:','//')):remote_resources.add(u)
+   elif u.startswith('/'):
+    target=local_target(u,source);refs+=1
+    if target is not None and not target.exists():errors.append([source,'srcset',u])
  for script in s.select('script[src]'):
   if script['src']!=BASE+'/site.js?v='+hashlib.sha256((DIST/'site.js').read_bytes()).hexdigest()[:16]:errors.append([source,'unexpected script',script['src']])
 for f in(DIST/'assets').glob('*.css'):

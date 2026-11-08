@@ -115,21 +115,47 @@ document.querySelectorAll('[id^="post_card_"].type_row>ul.list').forEach(row=>ro
 document.querySelectorAll('.ys-policy').forEach(p=>p.classList.add('ys-paper'));
 readableLayout();document.fonts.ready.then(readableLayout);
 
-// Hero motion stays decorative; the original artwork is always the fallback.
-document.querySelectorAll('video.ys-hero-motion').forEach(video=>{
- const section=video.closest('[doz_type="section"]'),button=section?.querySelector('.ys-motion-toggle');
- if(!button)return;
- const reduced=matchMedia('(prefers-reduced-motion: reduce)');let userPaused=false,inView=true;
- video.muted=true;
- const sync=()=>{if(reduced.matches||document.hidden||!inView||userPaused){video.pause();}else{video.play().then(reveal).catch(()=>{button.hidden=false;button.textContent='영상 재생';button.setAttribute('aria-label','배경 영상 재생');});}};
- const label=()=>{const paused=video.paused;button.textContent=paused?'재생':'일시정지';button.setAttribute('aria-label','배경 영상 '+(paused?'재생':'일시정지'));button.setAttribute('aria-pressed',String(userPaused));};
- const reveal=()=>{if(video.readyState>=2&&!video.paused){video.classList.add('ys-motion-ready');button.hidden=reduced.matches;label();}};
- video.addEventListener('playing',reveal);
- video.addEventListener('pause',label);
- video.addEventListener('error',()=>{video.classList.remove('ys-motion-ready');button.hidden=true;});
- button.addEventListener('click',()=>{userPaused=!video.paused;sync();label();});
- reduced.addEventListener('change',()=>{button.hidden=reduced.matches;sync();});
- document.addEventListener('visibilitychange',sync);
+// Animated images on phones avoid media autoplay restrictions. Desktop uses the lighter MP4.
+document.querySelectorAll('[data-hero-motion]').forEach(section=>{
+ const video=section.querySelector('video.ys-hero-motion'),button=section.querySelector('.ys-motion-toggle');
+ const picture=section.querySelector('.ys-hero-mobile-picture'),image=picture?.querySelector('img'),imageSource=picture?.querySelector('source');
+ if(!video||!button)return;
+ const mobile=matchMedia('(max-width:991px)'),reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ let userPaused=false,manualPlay=false,inView=true,imageFailed=false,generation=0;
+ video.muted=true;video.defaultMuted=true;
+ const wantsMotion=()=>inView&&!document.hidden&&!userPaused&&(!reduced.matches||manualPlay);
+ const label=playing=>{
+  section.dataset.motionState=playing?'playing':'paused';button.hidden=false;
+  button.textContent=playing?'일시정지':'움직임 재생';
+  button.setAttribute('aria-label','배경 움직임 '+(playing?'일시정지':'재생'));
+  button.setAttribute('aria-pressed',String(userPaused));
+ };
+ const imageMedia=active=>{if(imageSource){const value=active?'(max-width:991px)':'not all';if(imageSource.media!==value)imageSource.media=value;}};
+ const sync=()=>{
+  const current=++generation,active=wantsMotion();
+  if(mobile.matches&&imageSource){
+   section.dataset.motionMode='image';video.pause();
+   if(video.hasAttribute('src')){video.removeAttribute('src');video.load();}
+   imageMedia(active&&!imageFailed);label(active&&!imageFailed);return;
+  }
+  section.dataset.motionMode='video';imageMedia(false);
+  if(!active){video.pause();label(false);return;}
+  video.classList.remove('ys-motion-failed');
+  if(!video.hasAttribute('src'))video.src=video.dataset.motionSrc;
+  else if(video.error)video.load();
+  video.play().then(()=>{if(current===generation)label(!video.paused);}).catch(()=>{if(current===generation)label(false);});
+ };
+ button.addEventListener('click',()=>{
+  const playing=section.dataset.motionMode==='image'?section.dataset.motionState==='playing':!video.paused;
+  userPaused=playing;manualPlay=!playing;if(!playing)imageFailed=false;sync();
+ });
+ video.addEventListener('playing',()=>{if(section.dataset.motionMode==='video')label(true);});
+ video.addEventListener('pause',()=>{if(section.dataset.motionMode==='video')label(false);});
+ video.addEventListener('error',()=>{if(section.dataset.motionMode==='video'){video.classList.add('ys-motion-failed');label(false);}});
+ image?.addEventListener('error',()=>{imageFailed=true;imageMedia(false);label(false);});
+ mobile.addEventListener('change',sync);
+ reduced.addEventListener('change',()=>{manualPlay=false;sync();});
+ document.addEventListener('visibilitychange',sync);addEventListener('pageshow',sync);
  new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;sync();},{threshold:.02}).observe(section);
  sync();
 });

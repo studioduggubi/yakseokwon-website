@@ -7,7 +7,13 @@
     "bytes": 717136,
     "source": "Higgsfield Wan 3.0",
     "job_id": "962833d6-6309-41c2-88c5-bd15897a06f4",
-    "motion": "Generated visible motion, stable original plate with protected subjects; forward circular crossfade loop"
+    "motion": "Generated visible motion, stable original plate with protected subjects; forward circular crossfade loop",
+    "mobile_src": "/media/home-hero-mobile-0e1c74b8250d.webp",
+    "mobile_bytes": 777960,
+    "mobile_width": 960,
+    "mobile_height": 668,
+    "mobile_frames": 86,
+    "mobile_loop": 0
   },
   "experience": {
     "section": "s202508288408bd2e272a9",
@@ -17,7 +23,13 @@
     "bytes": 336441,
     "source": "Higgsfield Wan 3.0",
     "job_id": "5e381619-4ca3-4dce-bea1-5da2402f8a38",
-    "motion": "Generated visible motion, stable original plate with protected subjects; forward circular crossfade loop"
+    "motion": "Generated visible motion, stable original plate with protected subjects; forward circular crossfade loop",
+    "mobile_src": "/media/experience-hero-mobile-e35838f05ca9.webp",
+    "mobile_bytes": 320686,
+    "mobile_width": 960,
+    "mobile_height": 594,
+    "mobile_frames": 90,
+    "mobile_loop": 0
   },
   "food": {
     "section": "s20250831c3dc1b0969b90",
@@ -27,6 +39,12 @@
     "bytes": 131143,
     "source": "Higgsfield Wan 3.0",
     "job_id": "cc15221b-7507-49df-9c89-6d3c7db365d8",
-    "motion": "Generated visible motion, stable original plate with protected subjects; forward circular crossfade loop"
+    "motion": "Generated visible motion, stable original plate with protected subjects; forward circular crossfade loop",
+    "mobile_src": "/media/food-hero-mobile-7d4f6e608685.webp",
+    "mobile_bytes": 105776,
+    "mobile_width": 960,
+    "mobile_height": 694,
+    "mobile_frames": 90,
+    "mobile_loop": 0
   }
 }

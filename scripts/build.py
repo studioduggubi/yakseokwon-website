@@ -23,7 +23,7 @@ def prefix_html(text):
  if not BASE_PATH:return text
  doc=BeautifulSoup(text,'html.parser')
  for e in doc.find_all(True):
-  for attr in['href','src','poster','data-href','data-original','action']:
+  for attr in['href','src','poster','data-href','data-original','data-motion-src','action']:
    if e.get(attr):e[attr]=public_path(e[attr])
   if e.get('srcset'):
    e['srcset']=', '.join(public_path(part.strip().split(' ')[0])+(' '+part.strip().split(' ',1)[1]if' 'in part.strip()else'')for part in e['srcset'].split(','))
@@ -130,11 +130,13 @@ def hero_motion(key,body):
  motion=json.loads(config.read_text()).get(key)
  if not motion:return body
  if not(ROOT/'public'/motion['src'].lstrip('/')).is_file():raise RuntimeError('Hero video is missing')
+ if motion.get('mobile_src')and not(ROOT/'public'/motion['mobile_src'].lstrip('/')).is_file():raise RuntimeError('Mobile hero animation is missing')
  doc=BeautifulSoup(body,'html.parser');section=doc.find(id=motion['section'])
  if not section:return body
  bg=section.select_one('.section_bg')
  if not bg:return body
  bg['class']=list(bg.get('class',[]))+['ys-motion-bg']
+ section['data-hero-motion']=''
  # Preserve the captured positioning: the mobile fixed-image wrapper clips its children.
  # Replacing the whole style removes its absolute inset and collapses that wrapper to zero height.
  original_style=bg.get('style','')
@@ -142,9 +144,16 @@ def hero_motion(key,body):
  bg['style']=re.sub(r'background-image\s*:[^;]*;?',replacement,original_style,flags=re.I)if re.search(r'background-image\s*:',original_style,re.I)else original_style+';'+replacement
  for image in bg.select('img'):
   image['src']=motion['poster'];image.attrs.pop('srcset',None)
- video=doc.new_tag('video',attrs={'class':'ys-hero-motion','autoplay':'','muted':'','loop':'','playsinline':'','preload':'metadata','poster':motion['poster'],'aria-hidden':'true','tabindex':'-1'})
- video.append(doc.new_tag('source',src=motion['src'],type='video/mp4'));bg.append(video)
- button=doc.new_tag('button',type='button',attrs={'class':'ys-motion-toggle','aria-label':'배경 영상 일시정지','aria-pressed':'false','hidden':''});button.string='일시정지';section.append(button)
+ # Desktop media is assigned by the controller, so phones never download an unused MP4.
+ video=doc.new_tag('video',attrs={'class':'ys-hero-motion','data-motion-src':motion['src'],'muted':'','loop':'','playsinline':'','preload':'none','poster':motion['poster'],'aria-hidden':'true','tabindex':'-1'})
+ bg.append(video)
+ if motion.get('mobile_src'):
+  bg['class'].append('ys-has-mobile-motion')
+  picture=doc.new_tag('picture',attrs={'class':'ys-hero-mobile-picture'})
+  picture.append(doc.new_tag('source',attrs={'srcset':motion['mobile_src'],'type':'image/webp','media':'(max-width:991px) and (prefers-reduced-motion:no-preference)'}))
+  picture.append(doc.new_tag('img',src=motion['poster'],alt='',attrs={'class':'ys-hero-mobile-motion','aria-hidden':'true','decoding':'async','fetchpriority':'high'}))
+  bg.append(picture)
+ button=doc.new_tag('button',type='button',attrs={'class':'ys-motion-toggle','aria-label':'배경 움직임 재생','aria-pressed':'false','hidden':''});button.string='움직임 재생';section.append(button)
  return str(doc)
 def write_page(key,p,content=None):
  route=page_route(key)if key not in ['terms','privacy']else'/'+key+'/'
