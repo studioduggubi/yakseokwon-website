@@ -38,7 +38,35 @@ document.querySelectorAll('[data-youtube]').forEach(button=>button.addEventListe
 }));
 document.querySelectorAll('.owl-carousel').forEach(g=>{const track=g.querySelector('.owl-stage'),outer=g.querySelector('.owl-stage-outer');if(!track||!outer)return;g.querySelectorAll('.owl-item.cloned').forEach(e=>e.remove());track.style.transform='none';track.style.width='max-content';track.style.display='flex';g.querySelectorAll('.owl-item').forEach(e=>{e.style.float='none';e.style.flexShrink='0';});g.querySelectorAll('.owl-prev,.owl-next').forEach((b)=>{b.setAttribute('role','button');b.setAttribute('tabindex','0');b.setAttribute('aria-label',b.classList.contains('owl-prev')?'이전 이미지':'다음 이미지');const move=()=>{const back=b.classList.contains('owl-prev'),end=outer.scrollWidth-outer.clientWidth;const left=back?(outer.scrollLeft<2?end:Math.max(0,outer.scrollLeft-outer.clientWidth)):(outer.scrollLeft>end-2?0:Math.min(end,outer.scrollLeft+outer.clientWidth));outer.scrollTo({left,behavior:'smooth'});};b.addEventListener('click',move);b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();move()}});});});
 let boardIndexPromise;
-document.querySelectorAll('form').forEach(form=>{const input=form.querySelector('input[name="keyword"]');if(!input)return;const kind=location.pathname.slice(siteBase.length).startsWith('/events')?'events':'newsroom';const container=document.querySelector('[id^="post_card_"]');if(!container)return;const original=container.innerHTML;let generation=0;const search=async()=>{const current=++generation,q=input.value.trim().toLocaleLowerCase();let count=0;container.closest('.widget.board')?.classList.toggle('ys-searching',Boolean(q));if(!q){container.innerHTML=original;}else{boardIndexPromise??=fetch(siteBase+'/data/boards.json?v='+encodeURIComponent(root.dataset.boardVersion||''),{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('search index unavailable');return r.json();}).catch(()=>{boardIndexPromise=null;return {newsroom:[],events:[]};});const index=await boardIndexPromise;if(current!==generation)return;const rows=(index[kind]||[]).filter(x=>x.text.toLocaleLowerCase().includes(q));container.innerHTML=rows.map(x=>x.html).join('');count=rows.length;container.querySelectorAll('img').forEach(img=>img.addEventListener('load',masonryLayout,{once:true}));}let status=form.querySelector('[role="status"]');if(!status){status=document.createElement('p');status.setAttribute('role','status');form.append(status);}status.textContent=q?`검색 결과 ${count}건`:'';masonryLayout();};form.addEventListener('submit',e=>{e.preventDefault();search();});form.querySelector('.ico-search')?.addEventListener('click',e=>{e.preventDefault();search();});form.querySelector('.ico-search')?.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();search();}});input.addEventListener('input',search);});
+document.querySelectorAll('form').forEach(form=>{
+ const input=form.querySelector('input[name="keyword"]');if(!input)return;
+ const kind=location.pathname.slice(siteBase.length).startsWith('/events')?'events':'newsroom';
+ const container=document.querySelector('[id^="post_card_"]');if(!container)return;
+ const original=container.innerHTML;let generation=0;
+ const search=async()=>{
+  const current=++generation,q=input.value.trim().toLocaleLowerCase();
+  let status=form.querySelector('[role="status"]');
+  if(!status){status=document.createElement('p');status.setAttribute('role','status');form.append(status);}
+  container.closest('.widget.board')?.classList.toggle('ys-searching',Boolean(q));
+  if(!q){container.innerHTML=original;status.textContent='';}
+  else{
+   status.textContent='검색 중…';
+   try{
+    boardIndexPromise??=fetch(siteBase+'/data/boards.json?v='+encodeURIComponent(root.dataset.boardVersion||''),{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('search index unavailable');return r.json();}).catch(error=>{boardIndexPromise=null;throw error;});
+    const index=await boardIndexPromise;if(current!==generation)return;
+    const rows=(index[kind]||[]).filter(x=>x.text.toLocaleLowerCase().includes(q));
+    container.innerHTML=rows.map(x=>x.html).join('');status.textContent=`검색 결과 ${rows.length}건`;
+    container.querySelectorAll('img').forEach(img=>img.addEventListener('load',masonryLayout,{once:true}));
+   }catch(error){if(current===generation)status.textContent='검색을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.';return;}
+  }
+  container.querySelectorAll(':scope>ul.list').forEach(row=>row.classList.add('ys-event-card'));
+  masonryLayout();
+ };
+ form.addEventListener('submit',e=>{e.preventDefault();search();});
+ form.querySelector('.ico-search')?.addEventListener('click',e=>{e.preventDefault();search();});
+ form.querySelector('.ico-search')?.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();search();}});
+ input.addEventListener('input',search);
+});
 // Captured desktop gallery widths are preserved; mobile retains the original one-card layout.
 const slideSettings={
 container_w2025101929b00fb99f7ed:{desktop:1,mobile:1,photo:true,heightRatio:1180/2800},
