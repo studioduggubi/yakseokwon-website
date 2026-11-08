@@ -161,7 +161,7 @@ def hero_motion(key,body):
  config=ROOT/'content/hero-motion.json'
  if not config.exists():return body
  motion=json.loads(config.read_text()).get(key)
- if not motion:return body
+ if not motion or not motion.get('enabled',True):return body
  if not(ROOT/'public'/motion['src'].lstrip('/')).is_file():raise RuntimeError('Hero video is missing')
  if motion.get('mobile_src')and not(ROOT/'public'/motion['mobile_src'].lstrip('/')).is_file():raise RuntimeError('Mobile hero animation is missing')
  doc=BeautifulSoup(body,'html.parser');section=doc.find(id=motion['section'])

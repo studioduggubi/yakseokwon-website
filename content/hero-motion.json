@@ -14,7 +14,8 @@
     "mobile_height": 668,
     "mobile_frames": 90,
     "mobile_loop": 0,
-    "controls": false
+    "controls": false,
+    "enabled": false
   },
   "experience": {
     "section": "s202508288408bd2e272a9",

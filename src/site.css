@@ -505,7 +505,7 @@ html.ys-independent.ys-designed #container_w2025082915f1675319bb0 .text_wrap p,h
 html.ys-independent.ys-designed #ys-food-quality-v5 figure{padding:10px!important;border-radius:10px!important;gap:12px!important;align-items:center;background:#fafbf7!important}
 html.ys-independent.ys-designed #ys-food-quality-v5 figure>img{display:block;border-radius:7px!important;overflow:hidden;width:100%!important}
 html.ys-independent.ys-designed #ys-food-quality-v5 figcaption{padding:4px!important;background:transparent!important}
-html.ys-independent.ys-designed #s20250831c3dc1b0969b90{display:flex!important;flex-direction:column;align-items:center;padding:40px 28px 20px!important;background:#fff!important}
+html.ys-independent.ys-designed #s20250831c3dc1b0969b90{display:flex!important;flex-direction:column;align-items:center;padding:40px 28px 0!important;background:#fff!important}
 html.ys-independent.ys-designed #s20250831c3dc1b0969b90>main{order:0;width:100%}
 html.ys-independent.ys-designed #s20250831c3dc1b0969b90>.section_bg_color{display:none!important}
 html.ys-independent.ys-designed #s20250831c3dc1b0969b90>.ys-motion-bg{order:1;position:relative!important;inset:auto!important;flex:none;width:min(100%,420px)!important;height:260px!important;margin:16px auto 0!important;background-image:none!important;overflow:hidden;clip-path:none!important;pointer-events:none}
@@ -535,7 +535,7 @@ html.ys-independent.ys-designed #s20250831c3dc1b0969b90 .ys-food-hero-copy p:las
 .ys-review-full-text{font:400 15px/1.8 var(--ys-sans);color:var(--ys-ink);margin:0;word-break:keep-all;overflow-wrap:anywhere}
 .ys-review-dialog-nav{padding:0 20px 16px;justify-content:center;gap:20px}
 @media(max-width:991px){
- html.ys-independent.ys-designed #s20250831c3dc1b0969b90{padding:32px 28px 16px!important}
+ html.ys-independent.ys-designed #s20250831c3dc1b0969b90{padding:32px 28px 0!important}
  html.ys-independent.ys-designed #s20250831c3dc1b0969b90>.ys-motion-bg{width:min(100%,320px)!important;height:220px!important;margin-top:18px!important}
  .ys-review-card{flex-basis:calc((100% - 12px)/2)}
  .ys-review-controls{align-items:flex-start}.ys-review-hint{max-width:145px;padding-top:6px}
