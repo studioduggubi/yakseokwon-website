@@ -114,3 +114,31 @@ html.ys-readable .ys-action:hover{filter:brightness(.96)}
  .ys-designed #ys-food-quality-v5 figcaption,.ys-designed #ys-food-serving-v5 figcaption{padding:14px 12px!important}
  .ys-designed #ys-food-quality-v5 figcaption h6,.ys-designed #ys-food-serving-v5 figcaption h6{font-size:17px!important}
 }
+
+/* Ingredient catalogue: one consistent image/title group and a readable text column. */
+.ys-independent .ys-food-ingredients{padding:72px 0 80px;color:#55371e;font-family:SourceHanSerifKR,serif}
+.ys-independent .ys-ingredients-intro{margin:0 0 32px;max-width:680px}
+.ys-independent .ys-ingredients-intro h2{margin:0 0 18px;font-size:32px;line-height:1.5;letter-spacing:-.025em;font-weight:600;word-break:keep-all}
+.ys-independent .ys-ingredients-intro h2 span{display:block}
+.ys-independent .ys-ingredients-intro>p{margin:0;font-size:16px;line-height:1.85;color:#66513e;word-break:keep-all;overflow-wrap:anywhere}
+.ys-independent .ys-ingredients-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.ys-independent .ys-ingredient-card{min-width:0;background:#fff;border:1px solid #e6e0d6;border-radius:16px;padding:26px;box-shadow:0 4px 18px #55371e04}
+.ys-independent .ys-ingredient-heading{display:grid;grid-template-columns:72px minmax(0,1fr);align-items:center;gap:18px;margin-bottom:18px}
+.ys-independent .ys-ingredient-heading>img{display:block;width:72px!important;height:72px!important;object-fit:cover;border-radius:50%;background:#f6f3ed}
+.ys-independent .ys-ingredient-heading h3{margin:0 0 7px;font-size:22px;line-height:1.35;font-weight:600;letter-spacing:-.02em;color:#55371e;word-break:keep-all}
+.ys-independent .ys-ingredient-tagline{margin:0;font-size:14px;line-height:1.65;font-weight:500;color:#79634d;word-break:keep-all;overflow-wrap:anywhere}
+.ys-independent .ys-ingredient-description p{margin:0;font-size:15.5px;line-height:1.85;letter-spacing:-.01em;font-weight:400;color:#604f40;word-break:keep-all;overflow-wrap:anywhere}
+.ys-independent .ys-ingredient-description p+p{margin-top:10px}
+@media(max-width:767px){
+ .ys-independent .ys-food-ingredients{padding:44px 0 52px}
+ .ys-independent .ys-ingredients-intro{margin-bottom:26px}
+ .ys-independent .ys-ingredients-intro h2{font-size:24px;line-height:1.5;margin-bottom:14px}
+ .ys-independent .ys-ingredients-intro>p{font-size:15.5px;line-height:1.8}
+ .ys-independent .ys-ingredients-grid{grid-template-columns:minmax(0,1fr);gap:14px}
+ .ys-independent .ys-ingredient-card{padding:20px;border-radius:14px}
+ .ys-independent .ys-ingredient-heading{grid-template-columns:64px minmax(0,1fr);gap:16px;margin-bottom:16px}
+ .ys-independent .ys-ingredient-heading>img{width:64px!important;height:64px!important}
+ .ys-independent .ys-ingredient-heading h3{font-size:21px;margin-bottom:6px}
+ .ys-independent .ys-ingredient-tagline{font-size:13.5px;line-height:1.65}
+ .ys-independent .ys-ingredient-description p{font-size:15.5px;line-height:1.8}
+}

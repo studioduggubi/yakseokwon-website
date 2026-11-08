@@ -1,18 +1,18 @@
 {
   "home": {
     "section": "s202509079207ed6c50305",
-    "src": "/media/home-hero-c438a4131d5d.mp4",
+    "src": "/media/home-hero-7c3ce97ed743.mp4",
     "poster": "/media/home-hero-poster.webp",
     "duration": 5,
-    "bytes": 717136,
+    "bytes": 685704,
     "source": "Higgsfield Wan 3.0",
-    "job_id": "962833d6-6309-41c2-88c5-bd15897a06f4",
-    "motion": "Generated visible motion, stable original plate with protected subjects; forward circular crossfade loop",
-    "mobile_src": "/media/home-hero-mobile-0e1c74b8250d.webp",
-    "mobile_bytes": 777960,
+    "job_id": "5fc960a9-0cee-4ec6-b228-fbdd854e2570",
+    "motion": "Gentle wind in branch tips and robe hem, no smoke; protected original body and paper",
+    "mobile_src": "/media/home-hero-mobile-98c92d9cd16e.webp",
+    "mobile_bytes": 785324,
     "mobile_width": 960,
     "mobile_height": 668,
-    "mobile_frames": 86,
+    "mobile_frames": 90,
     "mobile_loop": 0
   },
   "experience": {
@@ -33,18 +33,19 @@
   },
   "food": {
     "section": "s20250831c3dc1b0969b90",
-    "src": "/media/food-hero-39af704fb557.mp4",
+    "src": "/media/food-hero-dade1d449453.mp4",
     "poster": "/media/food-hero-poster.webp",
-    "duration": 5,
-    "bytes": 131143,
+    "duration": 20,
+    "bytes": 1437398,
     "source": "Higgsfield Wan 3.0",
-    "job_id": "cc15221b-7507-49df-9c89-6d3c7db365d8",
-    "motion": "Generated visible motion, stable original plate with protected subjects; forward circular crossfade loop",
-    "mobile_src": "/media/food-hero-mobile-7d4f6e608685.webp",
-    "mobile_bytes": 105776,
-    "mobile_width": 960,
-    "mobile_height": 694,
-    "mobile_frames": 90,
-    "mobile_loop": 0
+    "job_id": "827e9dd9-efd3-4eaf-ab01-141e2601fee9",
+    "motion": "One slow clockwise 360-degree upright bowl turn over 20 seconds; no steam; no pause button",
+    "mobile_src": "/media/food-hero-mobile-af72e4ff4351.webp",
+    "mobile_bytes": 1720806,
+    "mobile_width": 800,
+    "mobile_height": 578,
+    "mobile_frames": 227,
+    "mobile_loop": 0,
+    "controls": false
   }
 }

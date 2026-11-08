@@ -119,13 +119,13 @@ readableLayout();document.fonts.ready.then(readableLayout);
 document.querySelectorAll('[data-hero-motion]').forEach(section=>{
  const video=section.querySelector('video.ys-hero-motion'),button=section.querySelector('.ys-motion-toggle');
  const picture=section.querySelector('.ys-hero-mobile-picture'),image=picture?.querySelector('img'),imageSource=picture?.querySelector('source');
- if(!video||!button)return;
+ if(!video)return;
  const mobile=matchMedia('(max-width:991px)'),reduced=matchMedia('(prefers-reduced-motion: reduce)');
  let userPaused=false,manualPlay=false,inView=true,imageFailed=false,generation=0;
  video.muted=true;video.defaultMuted=true;
  const wantsMotion=()=>inView&&!document.hidden&&!userPaused&&(!reduced.matches||manualPlay);
  const label=playing=>{
-  section.dataset.motionState=playing?'playing':'paused';button.hidden=false;
+  section.dataset.motionState=playing?'playing':'paused';if(!button)return;button.hidden=false;
   button.textContent=playing?'일시정지':'움직임 재생';
   button.setAttribute('aria-label','배경 움직임 '+(playing?'일시정지':'재생'));
   button.setAttribute('aria-pressed',String(userPaused));
@@ -145,7 +145,7 @@ document.querySelectorAll('[data-hero-motion]').forEach(section=>{
   else if(video.error)video.load();
   video.play().then(()=>{if(current===generation)label(!video.paused);}).catch(()=>{if(current===generation)label(false);});
  };
- button.addEventListener('click',()=>{
+ button?.addEventListener('click',()=>{
   const playing=section.dataset.motionMode==='image'?section.dataset.motionState==='playing':!video.paused;
   userPaused=playing;manualPlay=!playing;if(!playing)imageFailed=false;sync();
  });

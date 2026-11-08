@@ -124,6 +124,38 @@ def sanitize(p):
 def drawer():
  links=[('약석원','/'),('좌훈 치유 체험관','/Yakssuk/'),('약식동원 건강식','/food/'),('행사 일정','/events/'),('뉴스룸','/newsroom/'),('브랜드','/bi/'),('오시는 길','/2xlqqbbm/')]
  return '<div class="ys-mobile-nav" id="ys-mobile-nav" hidden><div class="ys-mobile-panel" role="dialog" aria-modal="true" aria-label="전체 메뉴"><button class="ys-menu-close" data-menu-close>닫기 ×</button>'+''.join('<a href="'+u+'">'+t+'</a>'for t,u in links)+'</div></div>'
+def food_ingredient_cards(body):
+ doc=BeautifulSoup(body,'html.parser');section=doc.find(id='s202508318c66279bacdf6')
+ if not section:return body
+ inside=section.select_one('main .inside')
+ widgets=section.select('[data-widget-type="text"]')
+ names=section.select('[data-widget-type="text"] h6')
+ photos=section.select('img.org_image')
+ descriptions=[w for w in widgets[2:]if not w.select_one('h1,h2,h3,h4,h5,h6')]
+ if not inside or len(names)!=8 or len(photos)!=8 or len(descriptions)!=8:raise RuntimeError('Ingredient layout source changed')
+ clean=lambda e:re.sub(r'\s+',' ',e.get_text(' ',strip=True)).strip()
+ title=clean(widgets[0]);intro=clean(widgets[1])
+ wrapper=doc.new_tag('div',id='ys-food-ingredients',attrs={'class':'ys-food-ingredients'})
+ header=doc.new_tag('header',attrs={'class':'ys-ingredients-intro'});h=doc.new_tag('h2')
+ parts=title.split(',',1)
+ for i,text in enumerate(parts):
+  span=doc.new_tag('span');span.string=text.strip()+(','if i==0 and len(parts)>1 else'');h.append(span)
+ header.append(h);p=doc.new_tag('p');p.string=intro;header.append(p);wrapper.append(header)
+ grid=doc.new_tag('div',attrs={'class':'ys-ingredients-grid'})
+ for index,(name,photo,description)in enumerate(zip(names,photos,descriptions),1):
+  label=clean(name);paragraphs=[clean(p)for p in description.select('p')if clean(p)]
+  card=doc.new_tag('article',attrs={'class':'ys-ingredient-card','aria-labelledby':'ys-ingredient-'+str(index)})
+  top=doc.new_tag('div',attrs={'class':'ys-ingredient-heading'})
+  top.append(doc.new_tag('img',src=photo['src'],alt='',width='72',height='72',attrs={'loading':'lazy','decoding':'async'}))
+  text=doc.new_tag('div');h=doc.new_tag('h3',id='ys-ingredient-'+str(index));h.string=label;text.append(h)
+  if paragraphs:
+   lead=doc.new_tag('p',attrs={'class':'ys-ingredient-tagline'});lead.string=paragraphs[0];text.append(lead)
+  top.append(text);card.append(top)
+  desc=doc.new_tag('div',attrs={'class':'ys-ingredient-description'})
+  for value in paragraphs[1:]:p=doc.new_tag('p');p.string=value;desc.append(p)
+  card.append(desc);grid.append(card)
+ wrapper.append(grid);inside.clear();inside.append(wrapper)
+ return str(doc)
 def hero_motion(key,body):
  config=ROOT/'content/hero-motion.json'
  if not config.exists():return body
@@ -153,7 +185,8 @@ def hero_motion(key,body):
   picture.append(doc.new_tag('source',attrs={'srcset':motion['mobile_src'],'type':'image/webp','media':'(max-width:991px) and (prefers-reduced-motion:no-preference)'}))
   picture.append(doc.new_tag('img',src=motion['poster'],alt='',attrs={'class':'ys-hero-mobile-motion','aria-hidden':'true','decoding':'async','fetchpriority':'high'}))
   bg.append(picture)
- button=doc.new_tag('button',type='button',attrs={'class':'ys-motion-toggle','aria-label':'배경 움직임 재생','aria-pressed':'false','hidden':''});button.string='움직임 재생';section.append(button)
+ if motion.get('controls',True):
+  button=doc.new_tag('button',type='button',attrs={'class':'ys-motion-toggle','aria-label':'배경 움직임 재생','aria-pressed':'false','hidden':''});button.string='움직임 재생';section.append(button)
  return str(doc)
 def write_page(key,p,content=None):
  route=page_route(key)if key not in ['terms','privacy']else'/'+key+'/'
@@ -165,7 +198,9 @@ def write_page(key,p,content=None):
  style='\n'.join(css(t,p['url'])for t in p['styles'][2:])
  name='page-'+hashlib.sha256(style.encode()).hexdigest()[:16]+'.css';(DIST/'assets'/name).write_text(style)
  head+='<link rel="stylesheet" href="/assets/'+name+'"><link rel="stylesheet" href="/site.css?v='+RUNTIME_CSS_HASH+'">'
- body=hero_motion(key,content if content is not None else sanitize(p))
+ body=content if content is not None else sanitize(p)
+ if key=='food':body=food_ingredient_cards(body)
+ body=hero_motion(key,body)
  doc='<!doctype html><html lang="ko" data-page-key="'+html.escape(key,quote=True)+'" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js?v='+RUNTIME_JS_HASH+'" defer></script></body></html>'
  dest=DIST/route.strip('/')/'index.html';dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(prefix_html(doc))
  return route
