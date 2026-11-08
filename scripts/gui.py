@@ -65,6 +65,33 @@ def tea_page(body):
  doc=BeautifulSoup(body,'html.parser');head=doc.select_one('header');foot=doc.select_one('footer')
  return str(head)+'''<main id="ys-main" class="ys-tea-page"><section class="ys-tea-hero"><img src="/assets/e868746e1cf9608f99.png" alt="따뜻한 차를 찻잔에 따르는 모습"><div><p class="ys-kicker">약석원의 세 가지 경험</p><h1>차 한 잔과 함께,<br>고요하게 쉬어가는 시간</h1><p>우리 땅의 약재와 전통을 담은 차는 몸을 맑히고 마음을 고요히 하며, 쉼과 명상을 선사하는 치유의 시간입니다.</p></div></section><section class="ys-tea-content"><p class="ys-kicker">차와 쉼</p><h2>좌훈의 온기와 함께 즐기는 차</h2><p>약석원의 좌훈 체험에서는 따뜻한 약쑥차도 함께 즐길 수 있습니다. 몸을 돌보는 시간에 차 한 잔의 여유를 더해보세요.</p><div class="ys-visit-actions"><a class="ys-button" href="/Yakssuk/">좌훈 체험 알아보기 →</a><a class="ys-button ys-button-outline" href="tel:0329375338">체험 문의 032-937-5338</a></div></section></main>'''+str(foot)
 
+def compact_components(doc,key):
+ if key=='food':
+  catalogue=doc.select_one('.ys-food-ingredients')
+  if catalogue:
+   title=catalogue.select_one('h2');title.clear();title.string='가족을 위한 좋은 재료'
+   intro=catalogue.select_one('.ys-ingredients-intro');intro.append(tag(doc,'p','재료를 누르면 자세한 설명을 볼 수 있어요.',**{'class':'ys-ingredient-hint'}))
+   for card in catalogue.select('.ys-ingredient-card'):
+    image=card.select_one('img').extract();heading=card.select_one('h3').extract();lead=card.select_one('.ys-ingredient-tagline').extract();description=card.select_one('.ys-ingredient-description').extract()
+    card.name='details';card.clear();summary=tag(doc,'summary');summary.append(image);summary.append(heading);summary.append(tag(doc,'span',**{'class':'ys-detail-chevron','aria-hidden':'true'}));card.append(summary)
+    detail=tag(doc,'div',**{'class':'ys-ingredient-detail'});detail.append(lead);detail.append(description);card.append(detail)
+  section=doc.find(id='s202508318fc100fe1710e')
+  if section:
+   package=section.find(id='img_w2025083188e9061346ccd');serving=section.find(id='ys-food-serving-v5');paragraphs=[clean(p)for w in section.select('[data-widget-type=text]')if not w.select_one('h1,h2,h3,h4,h5,h6')for p in w.select('p')if clean(p)]
+   if not package or not serving:raise ValueError('Product overview source changed')
+   src=package['src'];serving=serving.extract();markup='<div class="ys-section-intro"><p class="ys-kicker">전자레인지로 간편하게</p><h2 class="ys-section-title">3분이면 완성되는 건강밥</h2></div><div class="ys-product-overview"><img class="ys-product-pack" src="'+src+'" alt="약석원 건강밥 패키지" loading="lazy"><div>'+''.join('<p class="ys-body">'+html.escape(p)+'</p>'for p in paragraphs)+'</div></div>'
+   replace_inside(section,markup);section.select_one('main .inside').append(serving)
+ if key=='experience':
+  section=doc.find(id='s20250829f1c8d62e09ed7');steps=[]
+  if not section:return
+  for image in section.select('img.org_image'):
+   column=next((p for p in image.parents if 'col-dz-3'in p.get('class',[])and len(p.select('img'))==1 and len(p.select('[data-widget-type=text]'))==2),None)
+   if column is None:raise ValueError('Process card source changed')
+   widgets=column.select('[data-widget-type=text]');steps.append((image['src'],clean(widgets[0]),clean(widgets[1])))
+  if len(steps)!=4:raise ValueError('Expected four process artworks')
+  items=''.join('<li><img class="ys-process-art" src="'+src+'" alt="" loading="lazy"><div><h3>'+html.escape(title)+'</h3><p>'+html.escape(text)+'</p></div></li>'for src,title,text in steps)
+  replace_inside(section,'<div class="ys-section-intro"><p class="ys-kicker">체험 순서</p><h2 class="ys-section-title">좌훈 체험 4단계</h2></div><ol class="ys-process-grid">'+items+'</ol>')
+
 def enhance(key,body):
  if key=='tea':body=tea_page(body)
  doc=BeautifulSoup(body,'html.parser')
@@ -123,6 +150,7 @@ def enhance(key,body):
  # Use natural wrapping in long prose. Preserve links and emphasis.
  for p in doc.select('[data-widget-type=text] p'):
   if p.find_parent(['header','footer'])or p.find_parent(class_='ys-page-hero'):continue
+  if not clean(p).replace('\u200b','')and not p.select_one('img,video,iframe'):p.decompose();continue
   if len(clean(p))>=32:
    add(p,'ys-body')
    for br in p.select('br'):br.replace_with(' ')
@@ -130,6 +158,7 @@ def enhance(key,body):
     for emphasis in list(p.select('strong,b')):
      if clean(emphasis)==clean(p):emphasis.unwrap()
  for p in doc.select('.ys-ingredient-description p,.ys-ingredients-intro>p:not(.ys-kicker)'):add(p,'ys-body')
+ compact_components(doc,key)
  # Correct reservation links which accidentally landed in reviews.
  for a in doc.select('a[href]'):
   if '예약' in clean(a):a['href']=a['href'].replace('#REVIEW','')
@@ -169,6 +198,7 @@ def enhance(key,body):
   anchor=tag(doc,'a',href=url,**{'class':'ys-news-link','aria-label':clean(title)if title else'기사 읽기'})
   frame=card.select_one('.card');children=list(frame.contents);frame.clear()
   for child in children:anchor.append(child)
+  for holder in list(anchor.select(':scope>.holder')):holder.unwrap()
   frame.append(anchor)
   if title:title.name='h2'
  # Name primary pages and provide a useful title even for old directly linked pages.

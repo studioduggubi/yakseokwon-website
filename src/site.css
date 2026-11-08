@@ -351,3 +351,152 @@ html.ys-independent.ys-designed .ys-searching .paging-block,html.ys-independent.
 html.ys-independent.ys-designed .ys-search-form [role=status]{font:400 14px/1.5 var(--ys-sans);color:var(--ys-muted)}
 html.ys-independent.ys-designed .ys-search-form{flex-wrap:wrap}
 html.ys-independent.ys-designed .ys-search-form [role=status]{flex-basis:100%;margin:0!important}
+
+/* Density v5: a wider mobile gutter, compact rhythm and overview-first components. */
+html.ys-independent{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html.ys-independent.ys-designed .ys-content-section{padding-block:46px!important}
+html.ys-independent.ys-designed .ys-content-section>main>.inside{max-width:1060px!important;padding-inline:32px!important}
+html.ys-independent.ys-designed .ys-content-section .widget_text_wrap{margin-bottom:14px!important}
+html.ys-independent.ys-designed .ys-content-section .ys-title-block{margin:0!important}
+html.ys-independent.ys-designed .ys-content-section .widget_text_wrap:has(.ys-section-title){margin-bottom:16px!important}
+html.ys-independent.ys-designed .ys-section-title,html.ys-independent.ys-designed .ys-page-title{font-size:26px!important;line-height:1.4!important;margin:0 0 12px!important}
+html.ys-independent.ys-designed .ys-content-section .ys-title-block>.ys-section-title{margin-bottom:0!important}
+html.ys-independent.ys-designed .ys-kicker{font-size:10.5px!important;line-height:1.5!important;margin-bottom:8px!important;letter-spacing:.06em!important}
+html.ys-independent.ys-designed .ys-section-intro,html.ys-independent.ys-designed .ys-ingredients-intro{margin-bottom:20px!important;max-width:680px}
+html.ys-independent.ys-designed .ys-body,html.ys-independent.ys-designed .ys-body span,html.ys-independent.ys-designed .ys-content-section [data-widget-type=text] p:not(.ys-kicker):not(.ys-review-rating),html.ys-independent.ys-designed .ys-content-section [data-widget-type=text] p:not(.ys-kicker):not(.ys-review-rating) span{font-size:14.5px!important;line-height:1.75!important}
+html.ys-independent.ys-designed .ys-body{margin-bottom:12px!important}
+html.ys-independent.ys-designed .ys-body+.ys-body{margin-top:12px!important}
+html.ys-independent.ys-designed .ys-content-section .ys-item-title{font-size:18px!important;line-height:1.45!important;margin-bottom:9px!important}
+html.ys-independent.ys-designed .ys-page-hero .ys-hero-title{font-size:34px!important;line-height:1.45!important}
+html.ys-independent.ys-designed .ys-page-hero p,html.ys-independent.ys-designed .ys-page-hero p span{font-size:15px!important;line-height:1.75!important}
+html.ys-independent.ys-designed .ys-page-nav{max-width:1060px;padding:12px 32px;gap:6px 8px;font-size:12px}
+html.ys-independent.ys-designed .ys-page-nav a{padding:9px 13px;font-size:12px;min-height:40px}
+html.ys-independent.ys-designed .ys-button,html.ys-independent.ys-designed .ys-action{font-size:13.5px!important;min-height:44px!important;padding:10px 17px!important}
+html.ys-independent.ys-designed .ys-content-section:has(.ys-video){padding-block:30px!important}
+html.ys-independent.ys-designed .ys-video-intro .ys-section-title{font-size:22px!important;margin-bottom:0!important}
+html.ys-independent.ys-designed .ys-video{max-width:840px}
+html.ys-independent.ys-designed .ys-content-section:has(.ys-video) .text-table p{font-size:12px!important;line-height:1.6!important;margin-top:10px!important}
+/* Compact quality rows keep all four points together. */
+html.ys-independent.ys-designed #ys-food-quality-v5{gap:12px!important}
+html.ys-independent.ys-designed #ys-food-quality-v5 figure{border-radius:8px!important}
+html.ys-independent.ys-designed #ys-food-quality-v5 figcaption{padding:14px!important}
+html.ys-independent.ys-designed #ys-food-quality-v5 figcaption h3{font-size:16px!important;margin-bottom:6px!important;line-height:1.4!important}
+html.ys-independent.ys-designed #ys-food-quality-v5 figcaption p{font-size:13px!important;line-height:1.65!important;margin:0!important}
+/* A complete ingredient overview; the original descriptions remain available on tap. */
+html.ys-independent.ys-designed .ys-ingredients-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:start}
+html.ys-independent.ys-designed details.ys-ingredient-card{padding:0;border-radius:8px;box-shadow:none;overflow:hidden}
+html.ys-independent.ys-designed details.ys-ingredient-card>summary{display:grid;grid-template-columns:40px minmax(0,1fr) 10px;gap:10px;align-items:center;min-height:76px;padding:12px;list-style:none;cursor:pointer}
+html.ys-independent.ys-designed details.ys-ingredient-card>summary::-webkit-details-marker{display:none}
+html.ys-independent.ys-designed details.ys-ingredient-card>summary>img{width:40px!important;height:40px!important;object-fit:cover;border-radius:50%}
+html.ys-independent.ys-designed details.ys-ingredient-card>summary>h3{font:600 16px/1.4 var(--ys-serif)!important;margin:0!important;color:var(--ys-ink)!important;word-break:keep-all}
+.ys-detail-chevron{width:6px;height:6px;border-right:1px solid #6c7c60;border-bottom:1px solid #6c7c60;transform:rotate(45deg);margin-top:-4px}
+html.ys-independent.ys-designed details.ys-ingredient-card[open]{grid-column:span 2}
+html.ys-independent.ys-designed details.ys-ingredient-card[open] .ys-detail-chevron{transform:rotate(225deg);margin-top:4px}
+html.ys-independent.ys-designed .ys-ingredient-detail{padding:0 16px 16px;border-top:1px solid #edf0e8}
+html.ys-independent.ys-designed .ys-ingredient-detail .ys-ingredient-tagline{font-size:12.5px!important;line-height:1.65!important;margin:12px 0 8px!important}
+html.ys-independent.ys-designed .ys-ingredient-detail .ys-body{font-size:14px!important;line-height:1.7!important;margin:0!important}
+html.ys-independent.ys-designed .ys-ingredient-hint{font:400 11.5px/1.5 var(--ys-sans)!important;color:#7c8675;margin:10px 0 0!important}
+/* Product, preparation and serving now form one compact story. */
+.ys-product-overview{display:grid;grid-template-columns:200px minmax(0,1fr);gap:28px;align-items:center;margin:0 0 24px}
+.ys-product-pack{width:100%;height:auto;max-height:230px;object-fit:contain}
+html.ys-independent.ys-designed .ys-product-overview .ys-body{font-size:14px!important;line-height:1.7!important;margin:0!important}
+html.ys-independent.ys-designed #ys-food-serving-v5{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;max-width:800px!important;margin:0!important}
+html.ys-independent.ys-designed #ys-food-serving-v5 figure{border-radius:8px!important}
+html.ys-independent.ys-designed #ys-food-serving-v5 figure>img{height:160px!important;width:100%!important;object-fit:contain;aspect-ratio:16/10}
+html.ys-independent.ys-designed #ys-food-serving-v5 figcaption{padding:12px 14px!important}
+html.ys-independent.ys-designed #ys-food-serving-v5 figcaption h3{font-size:16px!important;line-height:1.4!important;margin-bottom:6px!important}
+html.ys-independent.ys-designed #ys-food-serving-v5 figcaption p{font-size:13px!important;line-height:1.65!important;margin:0!important}
+/* Four small process cards, with the original looping artwork. */
+.ys-process-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;list-style:none;margin:0;padding:0}
+.ys-process-grid>li{border:1px solid var(--ys-line);border-radius:8px;overflow:hidden;background:#fff;min-width:0}
+.ys-process-art{display:block;width:100%;height:160px;object-fit:contain;background:white}
+.ys-process-grid>li>div{padding:14px}
+.ys-process-grid h3{font:600 16px/1.5 var(--ys-serif);color:var(--ys-ink);margin:0 0 8px;word-break:keep-all}
+.ys-process-grid p{font:400 13.5px/1.7 var(--ys-sans);color:var(--ys-muted);margin:0;word-break:keep-all;overflow-wrap:anywhere}
+/* The other page types follow the same smaller scale. */
+.ys-explore-card h3{font-size:19px;margin-bottom:10px}.ys-explore-card p{font-size:14px;line-height:1.7;margin-bottom:14px}.ys-explore-card a>div{padding:18px}
+html.ys-independent.ys-designed .ys-news-grid .ysw-title{font-size:18px!important;line-height:1.5!important}
+html.ys-independent.ys-designed .ys-news-grid .card-body{padding:18px!important}
+html.ys-independent.ys-designed .ys-news-grid .text.text-block,html.ys-independent.ys-designed .ys-news-grid .text.text-block span{font-size:13.5px!important;line-height:1.7!important}
+html.ys-independent.ys-designed .ys-event-card .ysw-title{font-size:17px!important}
+html.ys-independent.ys-designed .ys-event-card .text-block:not(.ysw-title),html.ys-independent.ys-designed .ys-event-card .ysw-meta{font-size:13px!important}
+html.ys-independent.ys-designed .board_view{padding:32px!important;margin-block:32px!important}
+html.ys-independent.ys-designed .board_view .view_tit{font-size:27px!important;line-height:1.5!important}
+html.ys-independent.ys-designed .board_view .board_txt_area,html.ys-independent.ys-designed .board_view .board_txt_area p,html.ys-independent.ys-designed .board_view .board_txt_area p span{font-size:15px!important;line-height:1.8!important}
+html.ys-independent.ys-designed .ys-breadcrumb{margin-bottom:22px;padding-bottom:12px;font-size:12px}
+html.ys-independent.ys-designed .ys-policy-copy p{font-size:14.5px;line-height:1.75}
+html.ys-independent.ys-designed .ys-policy-copy h2{font-size:18px;margin-top:26px}
+.ys-fact-grid>section{padding:16px 0}.ys-fact-grid h3{font-size:14px;margin-bottom:8px}.ys-fact-grid p,.ys-fact-grid dl,.ys-fact-grid a{font-size:14px;line-height:1.7}.ys-visit-actions{margin:16px 0 22px}
+.ys-tea-hero h1{font-size:30px}.ys-tea-hero p:not(.ys-kicker),.ys-tea-content>p:not(.ys-kicker){font-size:14.5px;line-height:1.75}.ys-tea-content{padding-block:46px}.ys-tea-content h2{font-size:25px}
+html.ys-independent.ys-designed #img_w20251019da957068ed675{max-height:180px!important;width:auto!important;height:auto!important;object-fit:contain}
+html.ys-independent.ys-designed #img_w20251019b65a70a5e6b2b,html.ys-independent.ys-designed #img_w20251019f81baa52e996f,html.ys-independent.ys-designed #img_w2025101955cb4370b9949{max-height:180px!important;width:auto!important;height:auto!important;object-fit:contain}
+@media(max-width:991px){
+ html.ys-independent.ys-designed .ys-content-section{padding-block:32px!important}
+ html.ys-independent.ys-designed .ys-content-section>main>.inside{padding-inline:clamp(24px,7.2vw,36px)!important}
+ html.ys-independent.ys-designed .ys-section-title,html.ys-independent.ys-designed .ys-page-title{font-size:22px!important;line-height:1.45!important;margin-bottom:12px!important}
+ html.ys-independent.ys-designed .ys-content-section .ys-item-title{font-size:17px!important}
+ html.ys-independent.ys-designed .ys-body,html.ys-independent.ys-designed .ys-body span,html.ys-independent.ys-designed .ys-content-section [data-widget-type=text] p:not(.ys-kicker):not(.ys-review-rating),html.ys-independent.ys-designed .ys-content-section [data-widget-type=text] p:not(.ys-kicker):not(.ys-review-rating) span{font-size:14px!important;line-height:1.7!important}
+ html.ys-independent.ys-designed .ys-page-hero .ys-hero-title{font-size:26px!important}
+ html.ys-independent.ys-designed .ys-page-hero p,html.ys-independent.ys-designed .ys-page-hero p span{font-size:14px!important;line-height:1.75!important}
+ html.ys-independent.ys-designed .ys-page-nav{padding:10px 24px;gap:6px}
+ html.ys-independent.ys-designed .ys-page-nav a{font-size:11.5px;min-height:38px;padding:8px 12px}
+ html.ys-independent.ys-designed .ys-content-section:has(.ys-video){padding-block:26px!important}
+ html.ys-independent.ys-designed .ys-video-intro .ys-section-title{font-size:21px!important}
+ html.ys-independent.ys-designed #s20250831c3dc1b0969b90{padding:34px 28px 260px!important}
+ html.ys-independent.ys-designed .ys-food-hero-copy .ys-hero-title{font-size:24px!important;margin-bottom:18px!important}
+ html.ys-independent.ys-designed .ys-food-hero-copy p{margin-bottom:12px!important}
+ html.ys-independent.ys-designed .ys-ingredients-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ html.ys-independent.ys-designed details.ys-ingredient-card>summary{grid-template-columns:36px minmax(0,1fr) 7px;gap:8px;min-height:72px;padding:11px}
+ html.ys-independent.ys-designed details.ys-ingredient-card>summary>img{width:36px!important;height:36px!important}
+ html.ys-independent.ys-designed details.ys-ingredient-card>summary>h3{font-size:15px!important}
+ .ys-product-overview{grid-template-columns:120px minmax(0,1fr);gap:18px;margin-bottom:20px}
+ .ys-product-pack{max-height:170px}
+ html.ys-independent.ys-designed .ys-product-overview .ys-body{font-size:13.5px!important;line-height:1.7!important}
+ html.ys-independent.ys-designed #ys-food-serving-v5 figure>img{height:112px!important}
+ html.ys-independent.ys-designed #ys-food-serving-v5 figcaption{padding:11px!important}
+ html.ys-independent.ys-designed #ys-food-serving-v5 figcaption h3{font-size:15px!important}
+ html.ys-independent.ys-designed #ys-food-serving-v5 figcaption p{font-size:12.5px!important;line-height:1.6!important}
+ .ys-process-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .ys-process-art{height:118px}.ys-process-grid>li>div{padding:12px}.ys-process-grid h3{font-size:15px;line-height:1.5;margin-bottom:7px}.ys-process-grid p{font-size:13px;line-height:1.65}
+ .ys-explore-grid{gap:12px}.ys-explore-card>a{display:grid;grid-template-columns:86px minmax(0,1fr);align-items:center}.ys-explore-card img{width:86px;height:100%;min-height:100px;object-fit:cover;aspect-ratio:auto}.ys-explore-card a>div{padding:16px}.ys-explore-card h3{font-size:17px}.ys-explore-card p{font-size:13px;line-height:1.65;margin-bottom:10px}.ys-text-link{font-size:12px}
+ html.ys-independent.ys-designed .ys-news-grid{gap:12px!important}
+ html.ys-independent.ys-designed .ys-news-grid .ys-news-link{display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;padding:14px;align-items:start}
+ html.ys-independent.ys-designed .ys-news-grid .card-head img{width:88px;height:88px;aspect-ratio:1;object-fit:cover;border-radius:5px}
+ html.ys-independent.ys-designed .ys-news-grid .card-body{padding:0!important}
+ html.ys-independent.ys-designed .ys-news-grid .ysw-meta{font-size:11px!important;line-height:1.45!important;margin-bottom:5px}
+ html.ys-independent.ys-designed .ys-news-grid .ysw-title{font-size:16px!important;line-height:1.5!important;margin-bottom:7px}
+ html.ys-independent.ys-designed .ys-news-grid .text.text-block,html.ys-independent.ys-designed .ys-news-grid .text.text-block span{font-size:12.5px!important;line-height:1.6!important;-webkit-line-clamp:2}
+ html.ys-independent.ys-designed .ys-search-toolbar{margin-bottom:20px}.ys-search-toolbar label{font-size:12px!important}
+ html.ys-independent.ys-designed .ys-search-submit{font-size:13px;min-height:44px;flex-basis:60px}
+ html.ys-independent.ys-designed .board_view{margin:24px!important;padding:22px!important}
+ html.ys-independent.ys-designed .board_view .view_tit{font-size:22px!important;line-height:1.5!important}
+ html.ys-independent.ys-designed .board_view .board_txt_area,html.ys-independent.ys-designed .board_view .board_txt_area p,html.ys-independent.ys-designed .board_view .board_txt_area p span{font-size:14px!important;line-height:1.75!important}
+ .ys-tea-hero>img{height:230px}.ys-tea-hero>div,.ys-tea-content{padding:32px 28px}.ys-tea-hero h1{font-size:25px}.ys-tea-content h2{font-size:22px}
+ html.ys-independent.ys-designed #img_w20251019da957068ed675{max-height:140px!important}
+ html.ys-independent.ys-designed #img_w20251019b65a70a5e6b2b,html.ys-independent.ys-designed #img_w20251019f81baa52e996f,html.ys-independent.ys-designed #img_w2025101955cb4370b9949{max-height:120px!important}
+}
+@media(max-width:580px){
+ html.ys-independent.ys-designed #ys-food-quality-v5{grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
+ html.ys-independent.ys-designed #ys-food-quality-v5 figure{grid-template-columns:70px minmax(0,1fr);align-items:center}
+ html.ys-independent.ys-designed #ys-food-quality-v5 figure>img{width:70px!important;height:78px!important;aspect-ratio:1;object-fit:cover}
+ html.ys-independent.ys-designed #ys-food-quality-v5 figcaption{padding:12px 14px!important}
+ html.ys-independent.ys-designed #ys-food-quality-v5 figcaption h3{font-size:15.5px!important}
+ html.ys-independent.ys-designed #ys-food-serving-v5{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ .ys-fact-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}.ys-fact-grid .ys-fact-wide{grid-column:1/-1}
+ .ys-visit-actions .ys-button{width:auto}.ys-visit-actions{gap:8px}.ys-fact-grid dl>div{display:block}.ys-fact-grid dd{margin-bottom:8px}
+}
+@media(max-width:350px){
+ html.ys-independent.ys-designed details.ys-ingredient-card>summary{grid-template-columns:30px minmax(0,1fr) 5px;gap:6px;padding:9px}
+ html.ys-independent.ys-designed details.ys-ingredient-card>summary>img{width:30px!important;height:30px!important}
+ html.ys-independent.ys-designed details.ys-ingredient-card>summary>h3{font-size:14px!important}
+ .ys-product-overview{grid-template-columns:92px minmax(0,1fr);gap:14px}
+ .ys-process-art{height:100px}.ys-process-grid>li>div{padding:10px}.ys-process-grid p{font-size:12.5px}
+ html.ys-independent.ys-designed .ys-news-grid .ys-news-link{grid-template-columns:70px minmax(0,1fr);gap:12px;padding:12px}
+ html.ys-independent.ys-designed .ys-news-grid .card-head img{width:70px;height:76px}
+}
+html.ys-independent.ys-designed #ys-food-quality-v5{margin:12px 0 0!important}
+@media(max-width:991px){
+ html.ys-independent.ys-designed .ys-news-link>.card_wrapper,html.ys-independent.ys-designed .ys-news-link>.card-body{min-width:0;width:auto!important;float:none!important}
+ html.ys-independent.ys-designed .ys-news-grid .ysw-title{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+}
+html.ys-independent.ys-designed #container_w2025082915f1675319bb0 .text_wrap p,html.ys-independent.ys-designed #container_w20250831c7a044df617b7 .text_wrap p{font-size:13px!important;line-height:1.7!important}
