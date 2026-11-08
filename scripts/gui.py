@@ -106,7 +106,11 @@ def compact_components(doc,key):
    intro=catalogue.select_one('.ys-ingredients-intro');intro.append(tag(doc,'p','재료를 누르면 자세한 설명을 볼 수 있어요.',**{'class':'ys-ingredient-hint'}))
    for card in catalogue.select('.ys-ingredient-card'):
     image=card.select_one('img').extract();heading=card.select_one('h3').extract();lead=card.select_one('.ys-ingredient-tagline').extract();description=card.select_one('.ys-ingredient-description').extract()
-    card.name='details';card.clear();summary=tag(doc,'summary');summary.append(image);summary.append(heading);summary.append(tag(doc,'span',**{'class':'ys-detail-chevron','aria-hidden':'true'}));card.append(summary)
+    card.name='details';card.clear();summary=tag(doc,'summary')
+    if image.get('src','').endswith('black-rice-pd.jpg'):
+     photo=tag(doc,'span',**{'class':'ys-grain-photo','aria-hidden':'true'});photo.append(image);summary.append(photo)
+    else:summary.append(image)
+    summary.append(heading);summary.append(tag(doc,'span',**{'class':'ys-detail-chevron','aria-hidden':'true'}));card.append(summary)
     detail=tag(doc,'div',**{'class':'ys-ingredient-detail'});detail.append(lead);detail.append(description);card.append(detail)
   section=doc.find(id='s202508318fc100fe1710e')
   if section:

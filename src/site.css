@@ -681,3 +681,11 @@ html.ys-independent.ys-designed #s20250831c3dc1b0969b90>.ys-motion-bg{border:0!i
 @media(max-width:580px){
  html.ys-independent.ys-designed #ys-food-quality-v5 .ys-quality-media{width:70px;height:76px;aspect-ratio:auto}
 }
+
+/* Client-approved ingredient correction and compact event notices. */
+html.ys-independent.ys-designed .ys-grain-photo{display:block;position:relative;width:36px;height:36px;overflow:hidden;border-radius:50%}
+html.ys-independent.ys-designed .ys-grain-photo>img{display:block;width:100%!important;height:100%!important;max-width:none;object-fit:cover;object-position:center;transform:scale(2.3);border-radius:0!important}
+@media(max-width:350px){html.ys-independent.ys-designed .ys-grain-photo{width:30px;height:30px}}
+html.ys-independent.ys-designed .ys-event-body>img{display:block;width:100%;max-width:640px;height:auto;margin:20px 0 28px;border-radius:10px}
+html.ys-independent.ys-designed .ys-event-status{display:inline-block;padding:5px 12px;margin:0;border-radius:20px;background:#edf2e8;color:#3e633b;font-size:13px;font-weight:600}
+html.ys-independent.ys-designed .ys-event-body p{max-width:66ch}

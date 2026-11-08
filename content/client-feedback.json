@@ -1,0 +1,36 @@
+{
+  "ingredients": [
+    {
+      "name": "흑미",
+      "photo": "/assets/black-rice-pd.jpg",
+      "lead": "깊은 빛깔과 고소한 풍미를 더하는 흑미",
+      "paragraphs": [
+        "다양한 곡물과 어우러져 밥의 빛깔과 풍미를 더합니다. 매일의 밥상에 다채로운 맛을 전합니다."
+      ]
+    }
+  ],
+  "grain_count": "8~9곡",
+  "source": "Client feedback supplied 2026-11-08; grain composition varies by product.",
+  "image_source": {
+    "file": "public/assets/black-rice-pd.jpg",
+    "url": "https://commons.wikimedia.org/wiki/File:Black_rice.jpg",
+    "author": "Anna Frodesiak",
+    "license": "Public domain (PD-self)",
+    "note": "Illustrative ingredient photo; not a claim about the origin of the supplied grain."
+  },
+  "step4": {
+    "source": "../assets/experience-motion/source-main-clean.mp4",
+    "supine_seconds": [
+      145,
+      148
+    ],
+    "prone_seconds": [
+      154,
+      157
+    ],
+    "output": "public/assets/step4-abdomen-back-v1.gif",
+    "duration_seconds": 6,
+    "fps": 6,
+    "bytes": 348675
+  }
+}

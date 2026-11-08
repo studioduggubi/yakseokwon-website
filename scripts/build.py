@@ -143,11 +143,13 @@ def food_ingredient_cards(body):
   span=doc.new_tag('span');span.string=text.strip()+(','if i==0 and len(parts)>1 else'');h.append(span)
  header.append(h);p=doc.new_tag('p');p.string=intro;header.append(p);wrapper.append(header)
  grid=doc.new_tag('div',attrs={'class':'ys-ingredients-grid'})
- for index,(name,photo,description)in enumerate(zip(names,photos,descriptions),1):
-  label=clean(name);paragraphs=[clean(p)for p in description.select('p')if clean(p)]
+ ingredients=[(clean(name),photo['src'],[clean(p)for p in description.select('p')if clean(p)])for name,photo,description in zip(names,photos,descriptions)]
+ feedback=json.loads((ROOT/'content/client-feedback.json').read_text())if(ROOT/'content/client-feedback.json').exists()else{}
+ ingredients.extend((item['name'],item['photo'],[item['lead']]+item['paragraphs'])for item in feedback.get('ingredients',[]))
+ for index,(label,photo,paragraphs)in enumerate(ingredients,1):
   card=doc.new_tag('article',attrs={'class':'ys-ingredient-card','aria-labelledby':'ys-ingredient-'+str(index)})
   top=doc.new_tag('div',attrs={'class':'ys-ingredient-heading'})
-  top.append(doc.new_tag('img',src=photo['src'],alt='',width='72',height='72',attrs={'loading':'lazy','decoding':'async'}))
+  top.append(doc.new_tag('img',src=photo,alt='',width='72',height='72',attrs={'loading':'lazy','decoding':'async'}))
   text=doc.new_tag('div');h=doc.new_tag('h3',id='ys-ingredient-'+str(index));h.string=label;text.append(h)
   if paragraphs:
    lead=doc.new_tag('p',attrs={'class':'ys-ingredient-tagline'});lead.string=paragraphs[0];text.append(lead)
