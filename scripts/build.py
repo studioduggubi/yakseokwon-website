@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from gui import enhance,page_title
 from assets import preferred_fonts,URL,IMPORT,canonical
 ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
+BOARD_CONTENT_HASH=hashlib.sha256(b''.join(p.read_bytes()for p in sorted((ROOT/'content/pages').glob('*.json')))).hexdigest()[:16]
 RUNTIME_JS_HASH=hashlib.sha256((ROOT/'src/site.js').read_bytes()).hexdigest()[:16]
 RUNTIME_CSS_HASH=hashlib.sha256((ROOT/'src/site.css').read_bytes()).hexdigest()[:16]
 BASE_PATH='/'+os.environ.get('SITE_BASE_PATH','').strip('/')if os.environ.get('SITE_BASE_PATH','').strip('/')else''
@@ -205,7 +206,7 @@ def write_page(key,p,content=None):
  if key=='food':body=food_ingredient_cards(body)
  body=hero_motion(key,body)
  body=enhance(key,body)
- doc='<!doctype html><html lang="ko" data-page-key="'+html.escape(key,quote=True)+'" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js?v='+RUNTIME_JS_HASH+'" defer></script></body></html>'
+ doc='<!doctype html><html lang="ko" data-page-key="'+html.escape(key,quote=True)+'" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" data-board-version="'+BOARD_CONTENT_HASH+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js?v='+RUNTIME_JS_HASH+'" defer></script></body></html>'
  dest=DIST/route.strip('/')/'index.html';dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(prefix_html(doc))
  return route
 def main():
