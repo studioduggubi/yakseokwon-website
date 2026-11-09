@@ -1,64 +1,60 @@
 # 약석원 독립 웹사이트
 
-2026-11-07 공개 중인 아임웹 사이트를 기준으로, 기존 디자인을 보존하는 한국어 정적 사이트의 첫 구현본입니다. 현재 아임웹이나 도메인 설정을 변경하지 않습니다.
+약석원 원본 로고·서체·사진·민화·패키지와 승인된 GUI를 유지한 독립 정적 사이트입니다. 한국어·영어·중국어 번체·일본어로 55개 경로, 총 220개 HTML을 생성합니다. 현재 공개된 GitHub Pages 미리보기와 정식 도메인용 빌드를 구분합니다.
 
-로고, Source Han Serif 서체, 초록·갈색 팔레트, 여백, 사진·민화, 영상 썸네일, 좌훈 과정 GIF, 건강식 카드를 유지합니다. 홈·좌훈·건강식·자료실·뉴스룸·브랜드·오시는 길과 기존 연결 페이지, 뉴스 29건·행사 7건, 정책 2개를 포함해 52개 경로를 생성합니다.
+## 빌드 환경과 주소
 
-## 실행
+`content/site.json`이 모든 페이지·이미지·언어 링크·공유 메타데이터의 주소 기준입니다.
 
-Python 3.11 이상을 사용합니다. 가상환경과 패키지 캐시는 각 컴퓨터의 로컬 저장소에 둡니다.
+| 프로필 | 기준 주소 | 경로 접두사 | 용도 |
+| --- | --- | --- | --- |
+| `preview` | `https://studioduggubi.github.io` | `/yakseokwon-website` | 현재 공개 미리보기, 기본값 |
+| `production` | `https://yakseokwon.com` | 없음 | 정식 도메인 연결을 위한 준비본 |
+
+Python 3.11 이상에서 `python -m pip install -r requirements.txt`로 의존성을 설치합니다. 가상환경과 패키지 캐시는 각 컴퓨터에 둡니다.
 
 ```sh
-python3 -m pip install -r requirements.txt
-python3 scripts/build.py
-python3 scripts/verify.py
-python3 -m http.server 4318 --bind 127.0.0.1 --directory dist
+# 현재 GitHub 미리보기용: dist/
+SITE_PROFILE=preview python scripts/build.py
+SITE_PROFILE=preview python scripts/verify.py
+
+# 정식 주소용: dist-production/
+SITE_PROFILE=production SITE_OUTPUT_DIR=dist-production python scripts/build.py
+SITE_PROFILE=production SITE_OUTPUT_DIR=dist-production python scripts/verify.py
+
+# 정식 주소용 결과물을 로컬 루트에서 검토
+python -m http.server 4333 --bind 127.0.0.1 --directory dist-production
 ```
 
-`http://127.0.0.1:4318/`에서 확인합니다. 빌드 후 브라우저를 새로고침합니다.
+`http://127.0.0.1:4333/`에서 보는 정식 주소 준비본의 내부 페이지·이미지는 로컬 서버에서 동작하고, canonical·hreflang·공유 이미지·구조화 데이터의 절대 주소는 `https://yakseokwon.com`을 가리킵니다. 실제 도메인은 아직 기존 아임웹을 가리킬 수 있으므로, 준비본의 canonical 주소를 클릭해 새 사이트 배포 여부를 판단하지 않습니다.
+
+`SITE_OUTPUT_DIR`는 프로젝트 안의 `dist` 또는 `dist-*`만 허용합니다. 과거의 `SITE_BASE_PATH` 명령은 선택한 프로필 값과 같을 때만 허용하며, 정식 도메인과 GitHub 접두사를 섞으면 빌드를 중단합니다. 프로필별 주소·경로 기록과 검사 결과는 `reports/build-<profile>.json`, `reports/verification-<profile>.json`에 남습니다.
+
+## GitHub Pages 배포와 전환
+
+`.github/workflows/pages.yml`은 main 변경 시 정식 도메인용 패키지를 먼저 만들고 검사하여 `yakseokwon-production-<run>-<attempt>` 아티팩트로 14일 동안 보관합니다. 이어 현재 배포 프로필을 빌드·검사하고 GitHub Pages에 게시합니다. `PAGES_DEPLOY_PROFILE` 저장소 변수가 없으면 `preview`를 게시하므로, 준비 코드를 배포해도 현재 미리보기 주소를 유지합니다.
+
+정식 연결은 별도 전환 작업입니다. 도메인 구매처와 DNS 권한을 확인하고, GitHub에서 도메인 소유 확인·Pages custom domain 설정을 준비한 뒤 `PAGES_DEPLOY_PROFILE=production`과 DNS 연결을 계획한 시점에 전환합니다. `https://yakseokwon.com`, `www`, HTTPS, 내부 링크·다국어·다운로드·공유 미리보기를 검수한 뒤 기존 아임웹을 정리합니다. 이 저장소는 custom GitHub Actions로 배포하므로, 소스의 CNAME 파일은 연결 설정을 대신하지 않습니다.
+
+현재는 도메인·DNS·아임웹·GA4 설정을 변경하지 않습니다. 모든 HTML의 `noindex, nofollow, noarchive`도 유지합니다. robots.txt는 이 지시와 공유 메타데이터를 읽을 수 있도록 크롤링을 허용합니다. 검색 허용·사이트맵 제출·검색 등록은 별도 결정입니다. 개인정보처리방침의 기존 담당자·연락처 등 양식은 실제 운영 정보가 확정되면 정리해야 합니다.
 
 ## 편집 위치
 
-- `content/pages/*.json`: 공개 원본에서 확보한 페이지 HTML·스타일·메타데이터. 첫 이식 단계에서는 기존 구조와 문구를 그대로 유지합니다.
-- `src/site.css`, `src/site.js`: 독립 메뉴, 영상 재생, 갤러리, 게시판 검색·반응형 동작.
-- `content/asset-map.json`: 원본 에셋 주소와 로컬 파일 대응표.
-- `assets-*.zip`: 이미지·GIF·서체·스타일의 휴대 가능한 원본 묶음. GitHub 웹 업로드 제한에 맞춰 나눴으며 빌드 시 `public/assets/`에 복원합니다. 배포 파일에는 압축 묶음이 포함되지 않습니다.
-- `content/locales.json`: 한국어 우선 구현 및 후속 다국어 범위.
+- `content/pages/`: 수집한 원본 페이지·게시물 내용과 스타일.
+- `content/locales/`: 한국어·영어·중국어 번체·일본어 번역 원본.
+- `src/site.css`, `src/site.js`, `src/i18n.js`: 반응형 GUI·메뉴·검색·리뷰·언어 전환.
+- `scripts/gui.py`, `scripts/localize.py`: 페이지 구성과 정적 다국어 생성.
+- `scripts/site_config.py`, `content/site.json`: 배포 프로필·도메인·경로·출력 폴더.
+- `scripts/metadata.py`, `content/metadata.json`: 정적 canonical·언어 대체 링크·공유·브라우저 메타데이터.
+- `content/social-images.json`, `public/social/`, `scripts/social_templates.py`: 승인된 공유 이미지, 편집 가능한 HTML/CSS 원본. 건강식 공유 이미지는 원본 흰 로고와 강화도 지도이며, 중앙 정사각형 크롭에도 로고가 온전히 보입니다.
+- `public/icons/`, `public/site.webmanifest`: 원본 로고 파비콘·Apple 아이콘·브라우저 매니페스트. 서비스 워커는 없습니다.
+- `public/downloads/`: 브랜드 파일과 한국어·영어·중국어 번체·일본어 건강밥/좌훈 브로셔 PDF. 기존 파일은 덮어쓰거나 삭제하지 않습니다.
+- `assets-*.zip`, `content/asset-map.json`: 이미지·GIF·서체·스타일의 휴대 가능한 묶음과 대응표. 빌드에 외부 아임웹 접속은 필요하지 않습니다.
 
-원시 수집 자료·화면 비교 보고서는 Drive 작업 폴더에 별도로 보관하며 Git 저장소와 배포에서는 제외합니다. `scripts/assets.py`는 에셋 취득 이력을 재현하는 유지보수용 도구이며, 일상적인 빌드에는 외부 아임웹 접속이 필요하지 않습니다.
+메뉴·게시판 상세·검색·페이지 이동·리뷰·이미지 확대·YouTube 외부 재생·네이버 구매/예약·전화·지도 연결을 제공합니다. 결제·회원·아임웹 관리자 기능은 구현 범위에 포함하지 않으며, 게시물은 현재 JSON 수정과 재빌드로 관리합니다. 언론/행사 상세 공유 제목과 설명은 해당 게시물 내용을 사용하고, 원본 근거 없는 리뷰 평점·효능·판매가는 구조화 데이터에 추가하지 않습니다.
 
-## 기능과 전환 범위
-
-메뉴 이동, 게시물 상세·페이지 이동·전체 검색, 사진 슬라이드, YouTube 영상, 네이버 구매·예약, 전화·지도 연결을 구현합니다. 아임웹 관리자, 회원·알림, 결제, 게시물 작성 기능은 이 사이트의 제공 범위에 포함하지 않습니다. 게시물 관리는 현재 JSON 파일 수정과 재빌드 방식입니다.
-
-현재 모든 HTML에 `noindex, nofollow, noarchive`를 넣어 검색 제외를 요청합니다. 검색 등록·사이트맵 제출은 하지 않습니다. robots.txt는 검색봇이 이 지시를 읽도록 허용합니다. 검색 제외는 접근 제한 기능은 아닙니다. 실제 도메인 전환 전에는 공개용 robots·사이트맵·canonical·리디렉션·검색 등록·운영자 콘텐츠 관리 방식을 마무리해야 합니다.
-
-한·영·일·중간체·중번체 문구 인벤토리와 검토 항목은 기존 번역 계획 시트에 있습니다. 아직 승인되지 않은 외국어 번역을 게시하거나 언어 선택기를 표시하지 않습니다. 조리 시간·체험 시간 등 원문 사실은 승인된 제품 라벨을 기준으로 확정한 뒤 번역합니다.
-
-## 호스팅 및 롤백
-
-브랜드 AI·PNG·가이드 다운로드 3개는 원본 다운로드 주소를 유지합니다. 원본 서버가 일반 파일 요청에 접근 오류를 반환하여 파일 자체의 독립 이관은 아직 미완료입니다. 도메인 전환 전에 원본 파일을 확보해 교체해야 합니다.
-
-정적 결과물은 `dist/`입니다. GitHub는 소스 관리에 사용하고, 별도 정적 호스팅의 브랜치 미리보기로 검토한 뒤 전환합니다. 현행 도메인은 승인된 최종 전환 때만 변경합니다. 배포 커밋을 이전 버전으로 되돌려 롤백할 수 있습니다.
+원시 수집 자료·검수 기록은 Duggubi-Workspace 작업 폴더에 보존하고 Git과 배포에서는 제외합니다. Google Drive 로컬 저장과 서버 업로드 확인은 구분합니다. GitHub 배포를 되돌릴 때에는 최신 소스의 변경 범위를 확인하고 이전 커밋을 기준으로 새 커밋을 만들어 롤백합니다.
 
 ## 에셋 권리
 
-약석원·스튜디오두꺼비의 기존 이미지·민화·로고·3D 아트워크 및 영상은 각 권리자의 자산입니다. 웹사이트 열람이나 소스 공개가 이미지·민화·로고·3D 아트워크의 재사용 허가를 뜻하지는 않습니다. 서체·아이콘·공개 스타일은 원본 파일에 포함된 고지와 라이선스가 적용됩니다.
-
-## GitHub Pages 배포
-
-`.github/workflows/pages.yml`이 main 변경 시 빌드·검사 후 `dist/`만 배포합니다. 저장소 이름에 맞춘 경로를 `SITE_BASE_PATH`로 지정하며, 사이트는 GitHub Pages 기본 주소에서 동작합니다. 기존 약석원 도메인·검색 등록은 변경하지 않습니다.
-
-```sh
-SITE_BASE_PATH=/yakseokwon-website python3 scripts/build.py
-python3 scripts/verify.py
-```
-
-
-### Sharing cards and browser identity
-
-- `content/metadata.json` owns the reviewed descriptions and social-card copy for Korean, English, Traditional Chinese and Japanese. `scripts/metadata.py` injects metadata after translation, directly into all 220 static HTML pages.
-- `content/social-images.json` maps eight page families to 32 versioned 1200 × 630 JPEG cards. News and event articles retain individual titles and body excerpts with their family card. `public/icons/` contains the original-logo SVG, 16/32/48 ICO, 96 PNG, 180 Apple touch icon and 192/512 icons. No service worker is installed.
-- `scripts/social_templates.py` prepares editable native HTML/CSS card originals under `reports/metadata-20261108/`. Render those with a browser after fonts and images load; the capture manifest specifies each card rectangle. The packaging script and visual evidence are preserved in that report folder in the working project. Keep original logo proportions and update the versioned image map whenever a card changes.
-- Canonical URLs, reciprocal language alternatives (including x-default), Open Graph, large-image Twitter cards and Organization/WebSite/WebPage JSON-LD all use the actual GitHub Pages base path. No review ratings, medical claims, offers or unpublished video URLs are added to structured data.
-- Search exclusion remains deliberate: every page has `noindex, nofollow, noarchive`; crawling stays allowed so crawlers can read that directive and sharing metadata. No sitemap submission or search registration is performed. Enabling search later is a separate release decision. KakaoTalk can retain old server and device previews even after the site is updated.
+약석원·스튜디오두꺼비의 이미지·민화·로고·3D 아트워크·영상과 브로셔는 각 권리자의 자산입니다. 사이트와 소스 공개는 이 자료의 재사용 허가를 뜻하지 않습니다. 서체·아이콘·공개 스타일에는 원본 라이선스가 적용됩니다.

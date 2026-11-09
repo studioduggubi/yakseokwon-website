@@ -7,6 +7,7 @@ __pycache__/
 capture/
 reports/
 dist/
+dist-*/
 public/assets/
 TASK_STATE.json
 hosted-preview/

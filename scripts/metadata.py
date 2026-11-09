@@ -1,6 +1,6 @@
 """Static, locale-aware sharing and browser metadata. Search remains excluded."""
 import json,re
-ORIGIN='https://studioduggubi.github.io'
+from site_config import ORIGIN
 OG_LOCALES={'ko':'ko_KR','en':'en_US','zh-TW':'zh_TW','ja':'ja_JP'}
 ALIASES={'legacy-company':'home','legacy-experience':'experience','legacy-food':'food','legacy-store':'food','newsroom-page-2':'newsroom','newsroom-page-3':'newsroom','terms':'home','privacy':'home'}
 

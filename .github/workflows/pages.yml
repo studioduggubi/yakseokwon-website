@@ -17,7 +17,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     env:
-      SITE_BASE_PATH: /${{ github.event.repository.name }}
+      # Keep the current preview live until the custom-domain cutover is requested.
+      SITE_PROFILE: ${{ vars.PAGES_DEPLOY_PROFILE || 'preview' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -25,7 +26,20 @@ jobs:
           python-version: '3.12'
       - name: Install build dependency
         run: python -m pip install -r requirements.txt
-      - name: Build website
+      - name: Prepare and verify official-domain package
+        env:
+          SITE_PROFILE: production
+          SITE_OUTPUT_DIR: dist-production
+        run: |
+          python scripts/build.py
+          python scripts/verify.py
+      - name: Save official-domain package for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: yakseokwon-production-${{ github.run_id }}-${{ github.run_attempt }}
+          path: dist-production
+          retention-days: 14
+      - name: Build selected deployment
         run: python scripts/build.py
       - name: Check routes, assets and search exclusion
         run: python scripts/verify.py

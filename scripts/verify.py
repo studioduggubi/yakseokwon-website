@@ -3,9 +3,11 @@ import json,pathlib,re,urllib.parse,hashlib,struct
 from metadata import ORIGIN,OG_LOCALES
 from collections import Counter
 from bs4 import BeautifulSoup
-ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
+from site_config import ROOT,DIST,BASE_PATH,PROFILE,SETTINGS
 BASE=BeautifulSoup((DIST/'index.html').read_text(),'html.parser').html.get('data-site-base','')
 errors=[];remote_resources=set();refs=0;noindex_pages=0
+if BASE!=BASE_PATH:errors.append(['index.html','build base does not match selected profile',BASE,BASE_PATH])
+SELF_HOSTS={'studioduggubi.github.io','yakseokwon.com','www.yakseokwon.com'}
 
 def local_target(url,source):
  path=urllib.parse.urlsplit(url).path
@@ -20,6 +22,7 @@ pages=list(DIST.rglob('*.html'))
 parsed={f:BeautifulSoup(f.read_text(),'html.parser')for f in pages}
 for f in pages:
  text=f.read_text();s=parsed[f];source=str(f.relative_to(DIST))
+ if s.html.get('data-site-base')!=BASE_PATH or s.html.get('data-site-origin')!=ORIGIN or s.html.get('data-site-profile')!=PROFILE:errors.append([source,'mixed deployment profiles'])
  if len(s.select('h1'))!=1:errors.append([source,'expected one page heading'])
  if any('&rarr'in e.get_text()or e.get_text().rstrip().endswith(' &')for e in s.select('.show_body')):errors.append([source,'malformed preview arrow entity'])
  if s.select('.ys-kicker,.ys-bi-eyebrow,.ysw-eyebrow'):errors.append([source,'decorative title eyebrow remains'])
@@ -55,6 +58,7 @@ for f in pages:
  alternates=s.select('head link[rel=alternate][hreflang]')
  if {e['hreflang']for e in alternates}!={'ko','en','zh-Hant','ja','x-default'} or len(alternates)!=5:errors.append([source,'incomplete language alternatives'])
  for e in alternates:
+  if not e['href'].startswith(ORIGIN+BASE+'/'):errors.append([source,'language alternative uses another deployment origin',e['href']])
   path=urllib.parse.urlsplit(e['href']).path;target=local_target(path,source)
   if not target.exists():errors.append([source,'missing language alternative',e['href']])
   elif e['hreflang']!='x-default' and parsed.get(target) and parsed[target].html.get('lang')!=e['hreflang']:errors.append([source,'incorrect language alternative',e['href']])
@@ -81,6 +85,11 @@ for f in pages:
    u=e.get(k)
    if not u or u.startswith(('mailto:','tel:','#','data:','javascript:')):continue
    if u.startswith(('https:','http:','//')):
+    absolute=urllib.parse.urlsplit(u)
+    if absolute.hostname in SELF_HOSTS:
+     if not u.startswith(ORIGIN+BASE+'/'):errors.append([source,'stale self-hosted URL',u])
+     target=local_target(u,source);refs+=1
+     if target is not None and not target.exists():errors.append([source,'missing absolute self-hosted target',u])
     if e.name in['script','img','link','source','video']and(k!='href'or e.name=='link')and not(e.name=='link'and set(e.get('rel',[]))&{'canonical','alternate'}):remote_resources.add(u)
     continue
    if u.startswith('/'):
@@ -126,6 +135,6 @@ for code,prefix in [('ko',''),('en','/en'),('zh-TW','/zh-TW'),('ja','/ja')]:
   for relation,neighbor in [('prev',position+1),('next',position-1)]:
    if 0<=neighbor<len(calendar):expected.append((relation,BASE+prefix+calendar[neighbor][1][len(BASE):]))
   if actual!=expected:errors.append([source,'event chronology mismatch',actual,expected])
-report={'pages':len(pages),'base_path':BASE,'noindex_pages':noindex_pages,'checked_local_references':refs,'board_entries':{k:len(v)for k,v in index.items()},'event_navigation_edges':event_edges,'remote_resource_dependencies':sorted(remote_resources),'errors':errors}
-(ROOT/'reports/verification.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2))
+report={'profile':PROFILE,'origin':ORIGIN,'output_dir':SETTINGS['output_dir'],'pages':len(pages),'base_path':BASE,'noindex_pages':noindex_pages,'checked_local_references':refs,'board_entries':{k:len(v)for k,v in index.items()},'event_navigation_edges':event_edges,'remote_resource_dependencies':sorted(remote_resources),'errors':errors}
+(ROOT/'reports/verification.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));(ROOT/'reports'/('verification-'+PROFILE+'.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps(report,ensure_ascii=False,indent=2))
 if errors or remote_resources:raise SystemExit(1)

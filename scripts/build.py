@@ -1,16 +1,14 @@
 """Generate the independently served site from public content and localized assets."""
-import hashlib,html,json,pathlib,re,shutil,urllib.parse,zipfile,os
+import hashlib,html,json,pathlib,re,shutil,urllib.parse,zipfile
 from bs4 import BeautifulSoup
 from gui import enhance,page_title
 from localize import localize_site
 from media_links import rice_instructions
 from assets import preferred_fonts,URL,IMPORT,canonical
-ROOT=pathlib.Path(__file__).resolve().parents[1];DIST=ROOT/'dist'
+from site_config import ROOT,DIST,BASE_PATH,ORIGIN,PROFILE,SETTINGS
 BOARD_CONTENT_HASH=hashlib.sha256(b''.join(p.read_bytes()for p in sorted(list((ROOT/'content/pages').glob('*.json'))+list((ROOT/'content/locales').glob('*.json'))))).hexdigest()[:16]
 RUNTIME_JS_HASH=hashlib.sha256((ROOT/'src/site.js').read_bytes()).hexdigest()[:16]
 RUNTIME_CSS_HASH=hashlib.sha256((ROOT/'src/site.css').read_bytes()).hexdigest()[:16]
-BASE_PATH='/'+os.environ.get('SITE_BASE_PATH','').strip('/')if os.environ.get('SITE_BASE_PATH','').strip('/')else''
-if not re.fullmatch(r'(?:/[A-Za-z0-9._-]+)*',BASE_PATH)or any(x in['.','..']for x in BASE_PATH.split('/')):raise ValueError('Invalid SITE_BASE_PATH')
 MAP=json.loads((ROOT/'content/asset-map.json').read_text())
 DOWNLOADS={x['href']:'/downloads/'+x['file']for x in json.loads((ROOT/'content/downloads.json').read_text())}
 ROUTES={'home':'/','experience':'/Yakssuk/','food':'/food/','resources':'/events/','newsroom':'/newsroom/','brand':'/bi/','directions':'/2xlqqbbm/','tea':'/index2/','legacy-experience':'/2zf7yx5i/','legacy-food':'/2vu8cpl9/','legacy-store':'/20/','legacy-company':'/cq90acnd/','newsroom-page-2':'/newsroom/page/2/','newsroom-page-3':'/newsroom/page/3/'}
@@ -218,7 +216,7 @@ def write_page(key,p,content=None):
  if key in['food','legacy-food','legacy-store']:body=rice_instructions(body)
  body=hero_motion(key,body)
  body=enhance(key,body)
- doc='<!doctype html><html lang="ko" data-page-key="'+html.escape(key,quote=True)+'" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" data-board-version="'+BOARD_CONTENT_HASH+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js?v='+RUNTIME_JS_HASH+'" defer></script></body></html>'
+ doc='<!doctype html><html lang="ko" data-page-key="'+html.escape(key,quote=True)+'" data-site-base="'+html.escape(BASE_PATH,quote=True)+'" data-site-origin="'+html.escape(ORIGIN,quote=True)+'" data-site-profile="'+PROFILE+'" data-board-version="'+BOARD_CONTENT_HASH+'" class="'+html.escape(p['htmlClass'],quote=True)+'"><head>'+head+'</head><body id="doz_body" class="'+html.escape(p['bodyClass'],quote=True)+'">'+body+drawer()+'<script src="/site.js?v='+RUNTIME_JS_HASH+'" defer></script></body></html>'
  dest=DIST/route.strip('/')/'index.html';dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(prefix_html(doc))
  return route
 def main():
@@ -283,6 +281,7 @@ def main():
      (DIST/'data/boards.json').write_text(json.dumps(board_index,ensure_ascii=False))
     route_index=localize_site(ROOT,DIST,route_index,BASE_PATH)
     (ROOT/'reports/routes.json').write_text(json.dumps(route_index,ensure_ascii=False,indent=2))
-    print('Built',len(route_index),'pages; localized assets',len(MAP))
+    (ROOT/'reports'/('build-'+PROFILE+'.json')).write_text(json.dumps({**SETTINGS,'pages':len(route_index),'routes':route_index},ensure_ascii=False,indent=2)+'\n')
+    print('Built',len(route_index),'pages;',PROFILE,ORIGIN+BASE_PATH,'in',DIST.name,'; localized assets',len(MAP))
 
 if __name__=="__main__":main()

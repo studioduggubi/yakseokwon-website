@@ -1,0 +1,13 @@
+{
+  "default_profile": "preview",
+  "profiles": {
+    "preview": {
+      "origin": "https://studioduggubi.github.io",
+      "base_path": "/yakseokwon-website"
+    },
+    "production": {
+      "origin": "https://yakseokwon.com",
+      "base_path": ""
+    }
+  }
+}
