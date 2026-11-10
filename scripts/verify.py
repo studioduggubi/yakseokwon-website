@@ -1,11 +1,15 @@
 """Validate generated routes, assets, base paths, and search exclusion."""
 import json,pathlib,re,urllib.parse,hashlib,struct
 from metadata import ORIGIN,OG_LOCALES
+from analytics import analytics_settings
 from collections import Counter
 from bs4 import BeautifulSoup
 from site_config import ROOT,DIST,BASE_PATH,PROFILE,SETTINGS
 BASE=BeautifulSoup((DIST/'index.html').read_text(),'html.parser').html.get('data-site-base','')
 errors=[];remote_resources=set();refs=0;noindex_pages=0
+analytics=analytics_settings(ROOT)
+analytics_enabled=analytics['enabled']and PROFILE=='production'
+analytics_src=BASE+'/analytics.js?v='+hashlib.sha256((DIST/'analytics.js').read_bytes()).hexdigest()[:16]
 if BASE!=BASE_PATH:errors.append(['index.html','build base does not match selected profile',BASE,BASE_PATH])
 SELF_HOSTS={'studioduggubi.github.io','yakseokwon.com','www.yakseokwon.com'}
 
@@ -23,6 +27,11 @@ parsed={f:BeautifulSoup(f.read_text(),'html.parser')for f in pages}
 for f in pages:
  text=f.read_text();s=parsed[f];source=str(f.relative_to(DIST))
  if s.html.get('data-site-base')!=BASE_PATH or s.html.get('data-site-origin')!=ORIGIN or s.html.get('data-site-profile')!=PROFILE:errors.append([source,'mixed deployment profiles'])
+ analytics_tags=s.select('script[data-measurement-id]')
+ if len(analytics_tags)!=(1 if analytics_enabled else 0):errors.append([source,'incorrect analytics deployment'])
+ for tag in analytics_tags:
+  if tag.get('src')!=analytics_src or tag.get('data-origin')!=ORIGIN or tag.get('data-measurement-id')!=analytics['measurement_id']:errors.append([source,'incorrect analytics configuration'])
+ if s.html.get('data-page-key')=='privacy'and len(s.select('[data-analytics-choice]'))!=(1 if analytics_enabled else 0):errors.append([source,'missing analytics privacy control'])
  if len(s.select('h1'))!=1:errors.append([source,'expected one page heading'])
  if any('&rarr'in e.get_text()or e.get_text().rstrip().endswith(' &')for e in s.select('.show_body')):errors.append([source,'malformed preview arrow entity'])
  if s.select('.ys-kicker,.ys-bi-eyebrow,.ysw-eyebrow'):errors.append([source,'decorative title eyebrow remains'])
@@ -103,7 +112,7 @@ for f in pages:
     target=local_target(u,source);refs+=1
     if target is not None and not target.exists():errors.append([source,'srcset',u])
  for script in s.select('script[src]'):
-  if script['src'] not in[BASE+'/site.js?v='+hashlib.sha256((DIST/'site.js').read_bytes()).hexdigest()[:16],BASE+'/i18n.js?v='+hashlib.sha256((DIST/'i18n.js').read_bytes()).hexdigest()[:16]]and script['src']not in[BASE+'/i18n/'+p.name for p in(DIST/'i18n').glob('*.js')]:errors.append([source,'unexpected script',script['src']])
+  if script['src'] not in[BASE+'/site.js?v='+hashlib.sha256((DIST/'site.js').read_bytes()).hexdigest()[:16],BASE+'/i18n.js?v='+hashlib.sha256((DIST/'i18n.js').read_bytes()).hexdigest()[:16]]+([analytics_src]if analytics_enabled else[])and script['src']not in[BASE+'/i18n/'+p.name for p in(DIST/'i18n').glob('*.js')]:errors.append([source,'unexpected script',script['src']])
 for f in(DIST/'assets').glob('*.css'):
  for url in re.findall(r'url\([\"\']?([^\"\'\)]+)',f.read_text(errors='replace')):
   if url.startswith('/')and not url.startswith('//'):
@@ -135,6 +144,6 @@ for code,prefix in [('ko',''),('en','/en'),('zh-TW','/zh-TW'),('ja','/ja')]:
   for relation,neighbor in [('prev',position+1),('next',position-1)]:
    if 0<=neighbor<len(calendar):expected.append((relation,BASE+prefix+calendar[neighbor][1][len(BASE):]))
   if actual!=expected:errors.append([source,'event chronology mismatch',actual,expected])
-report={'profile':PROFILE,'origin':ORIGIN,'output_dir':SETTINGS['output_dir'],'pages':len(pages),'base_path':BASE,'noindex_pages':noindex_pages,'checked_local_references':refs,'board_entries':{k:len(v)for k,v in index.items()},'event_navigation_edges':event_edges,'remote_resource_dependencies':sorted(remote_resources),'errors':errors}
+report={'profile':PROFILE,'origin':ORIGIN,'output_dir':SETTINGS['output_dir'],'pages':len(pages),'base_path':BASE,'noindex_pages':noindex_pages,'checked_local_references':refs,'board_entries':{k:len(v)for k,v in index.items()},'event_navigation_edges':event_edges,'analytics':{'enabled':analytics_enabled,'measurement_id':analytics['measurement_id']if analytics_enabled else None,'runtime_dependency':'https://www.googletagmanager.com/gtag/js'if analytics_enabled else None},'remote_resource_dependencies':sorted(remote_resources),'errors':errors}
 (ROOT/'reports/verification.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));(ROOT/'reports'/('verification-'+PROFILE+'.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps(report,ensure_ascii=False,indent=2))
 if errors or remote_resources:raise SystemExit(1)

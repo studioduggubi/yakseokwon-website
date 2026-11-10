@@ -233,7 +233,7 @@ def main():
     (ROOT/'reports').mkdir(exist_ok=True)
     if DIST.exists():shutil.rmtree(DIST)
     shutil.copytree(ROOT/'public',DIST)
-    for file in ['site.css','site.js']:shutil.copy2(ROOT/'src'/file,DIST/file)
+    for file in ['site.css','site.js','analytics.js']:shutil.copy2(ROOT/'src'/file,DIST/file)
     route_index=[]
     for f in sorted((ROOT/'content/pages').glob('*.json')):
      if f.name=='bundle-manifest.json':continue

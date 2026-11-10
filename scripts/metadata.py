@@ -1,6 +1,7 @@
 """Static, locale-aware sharing and browser metadata. Search remains excluded."""
 import json,re
 from site_config import ORIGIN
+from analytics import apply_analytics
 OG_LOCALES={'ko':'ko_KR','en':'en_US','zh-TW':'zh_TW','ja':'ja_JP'}
 ALIASES={'legacy-company':'home','legacy-experience':'experience','legacy-food':'food','legacy-store':'food','newsroom-page-2':'newsroom','newsroom-page-3':'newsroom','terms':'home','privacy':'home'}
 
@@ -48,3 +49,4 @@ def apply_metadata(doc,page,locale,locales,root,base,route):
  graph=[{'@type':'Organization','@id':org_id,'name':'약석원','alternateName':['Yakseokwon','藥石院','ヤクソグォン'],'url':ORIGIN+base+'/','logo':{'@type':'ImageObject','url':ORIGIN+base+'/icons/icon-512.png','width':512,'height':512}}, {'@type':'WebSite','@id':site_url+'#website','url':site_url,'name':config['names'][code],'inLanguage':locale['html_lang'],'publisher':{'@id':org_id}}, {'@type':'WebPage','@id':canonical+'#webpage','url':canonical,'name':title,'description':description,'inLanguage':locale['html_lang'],'isPartOf':{'@id':site_url+'#website'},'primaryImageOfPage':{'@type':'ImageObject','url':image,'width':1200,'height':630}}]
  script=doc.new_tag('script',type='application/ld+json');script.string=json.dumps({'@context':'https://schema.org','@graph':graph},ensure_ascii=False,separators=(',',':')).replace('<','\\u003c');head.append(script)
  doc.html['prefix']='og: https://ogp.me/ns#'
+ apply_analytics(doc,page,code,root,base)
