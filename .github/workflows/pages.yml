@@ -17,7 +17,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     env:
-      # Keep the current preview live until the custom-domain cutover is requested.
+      # Repository variable selects preview or official-domain output.
       SITE_PROFILE: ${{ vars.PAGES_DEPLOY_PROFILE || 'preview' }}
     steps:
       - uses: actions/checkout@v4
@@ -55,3 +55,4 @@ jobs:
         uses: actions/deploy-pages@v5
         with:
           artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+          timeout: 1200000
